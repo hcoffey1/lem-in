@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 17:25:39 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/21 21:45:49 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,16 @@ static t_room	*new_room(char *line, int type)
 	t_room	*new;
 	char	**split;
 
+	if (type == 1)
+		type = 2;
 	if (!(new = (t_room *)malloc(sizeof(t_room))))
 		exit(-1);
 	new->links = NULL;
 	new->type = type;
 	new->edges = 0;
+	new->visited = 0;
+	new->closed = 0;
+	new->path = NULL;
 	if (!(split = ft_strsplit(line, ' ')))
 		exit(-1);
 	if (!*split || !*(split + 1) || !*(split + 2) || *(split + 3))
@@ -88,6 +93,10 @@ static void		connect(t_room **rooms_list, char *line, int connects)
 		(*room1)->links = malloc(sizeof(t_room *) * (connects + 1));
 	(*room1)->links[(*room1)->edges++] = *room2;
 	(*room1)->links[(*room1)->edges] = NULL;
+	if (!(*room2)->links)
+		(*room2)->links = malloc(sizeof(t_room *) * (connects + 1));
+	(*room2)->links[(*room2)->edges++] = *room1;
+	(*room2)->links[(*room2)->edges] = NULL;
 	free(*split);
 	free(*(split + 1));
 	free(split);
@@ -103,7 +112,8 @@ t_room			**read_file(int fd, int verteces, int connects)
 
 	if ((r = get_next_line(fd, &line)) <= 0)
 		exit(-1);
-	rooms_list = (t_room **)malloc(sizeof(t_room *) * (verteces + 1));
+	if (!(rooms_list = (t_room **)malloc(sizeof(t_room *) * (verteces + 1))))
+		exit(-1);
 	*(rooms_list + verteces) = NULL;
 	while ((r = get_next_line(fd, &line)))
 	{
@@ -112,12 +122,16 @@ t_room			**read_file(int fd, int verteces, int connects)
 		if (*line == '#')
 			type = check_line(line);
 		else if (verteces)
+		{
 			rooms_list[--verteces] = new_room(line, type);
-		else if (connects)
+			type = 2;
+		}
+		else if (connects--)
 			connect(rooms_list, line, connects--);
 		free(line);
-		type = 2;
 	}
+//	while ((*rooms_list)->type != 3)
+//		++rooms_list;
 	return (rooms_list);
 }
 
@@ -149,32 +163,5 @@ void		validate(int fd, int *ants, int *verteces, int *connects)
 	}
 	if (start != 1 || end != 1)
 		exit(-1);
-}
-
-int main(int argc, char **argv)
-{
-	t_room **rooms_list;
-	int		fd;
-	int		ants;
-	int		verteces;
-	int		connects;
-
-	if (argc != 2)
-		return (0);
-	fd = open(*(argv + 1), O_RDONLY);
-	validate(fd, &ants, &verteces, &connects);
-	close(fd);
-	fd = open(*(argv + 1), O_RDONLY);
-	rooms_list = read_file(fd, verteces, connects);
-	int i = 0;
-	while (i < verteces)
-	{
-		int j = 0;
-		printf("%s ", rooms_list[i]->name);
-		while (j < rooms_list[i]->edges)
-			printf("%s ", rooms_list[i]->links[j++]->name);
-		printf("\n");
-		++i;
-	}
-	close(fd);
+	*connects *= 2;
 }
