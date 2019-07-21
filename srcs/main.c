@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 22:12:05 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/21 22:24:36 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	list_nodes = read_file(fd, verteces, connects);
 	close(fd);
 	start = *list_nodes;
-	while (list_nodes[i]->type != 3)
+	while (list_nodes[i]->type != 3) // ищем стартовую ноду
 		++i;
 	start = list_nodes[i];
 /*	int i = 0;
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 		q = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
 		q->val = start;
 		q->next = NULL;
-		while (ants && breadth_first_search(start, q))
+		while (ants && breadth_first_search(start, q)) // ищем непересекающиеся пути, пока не закончатся
 		{
 			clear_list(list_nodes);
 			q = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
@@ -82,12 +82,6 @@ int main(int argc, char **argv)
 			q->next = NULL;
 			--ants;
 		}
-		clear_list_2(list_nodes);
+		clear_list_2(list_nodes); //очищаем все отметки о закрытых путях, следующий набор муравьёв пойдёт по старым путям
 	}
-//	depth_first_search(start);
-	// printf("\nlen %d\n", breadth_first_search(start, q));
-	// q = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
-	// q->val = start;
-	// q->next = NULL;
-	// printf("\nlen %d\n", breadth_first_search(start, q));
 }

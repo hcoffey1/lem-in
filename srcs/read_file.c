@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 21:45:49 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/21 22:19:55 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,6 @@ t_room			**read_file(int fd, int verteces, int connects)
 			connect(rooms_list, line, connects--);
 		free(line);
 	}
-//	while ((*rooms_list)->type != 3)
-//		++rooms_list;
 	return (rooms_list);
 }
 
