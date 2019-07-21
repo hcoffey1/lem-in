@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lemin.h                                            :+:      :+:    :+:   */
+/*   search.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/17 23:36:34 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 16:45:36 by smorty           ###   ########.fr       */
+/*   Created: 2019/07/21 16:37:02 by smorty            #+#    #+#             */
+/*   Updated: 2019/07/21 16:41:00 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEMIN_H
-# define LEMIN_H
+#include "lemin.h"
 
-#include <stdio.h> //remove
-
-typedef struct	s_room
+void	depth_first_search(t_room *start)
 {
-	char			*name;
-	int				x;
-	int				y;
-	int				type;
-	int				edges;
-	struct	s_room	**links;
-}				t_room;
+	int i;
 
-typedef struct	s_lemin
-{
-	int				ants;
-	t_room			map;
-}				t_lemin;
-
-#endif
+	i = 0;
+	t_room *next;
+	while (i < start->edges)
+	{
+		next = start->links[i++];
+		while (next->type != 4)
+			depth_first_search(next);
+	}
+}
