@@ -1,0 +1,27 @@
+10
+##start
+1 23 3
+2 16 7
+#comment
+3 16 3
+4 16 5
+5 9 3
+6 1 5
+7 4 8
+##end
+0 9 5
+#comment
+1-2
+1-3
+1-4
+1-5
+1-6
+1-7
+#another comment
+0-2
+0-3
+0-4
+0-5
+0-6
+0-7
+#another comment

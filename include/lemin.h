@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:36:34 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 21:45:44 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/22 15:10:14 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,23 @@ typedef struct	s_lemin
 	t_room			map;
 }				t_lemin;
 
+
 typedef struct	s_rooms_queue
 {
 	t_room			*val;
 	struct s_rooms_queue	*next;
 }				t_rooms_queue;
 
+typedef struct	s_path_list
+{
+	t_rooms_queue		*path;
+	int					len;
+	struct s_path_list	*right;
+	struct s_path_list	*left;
+}				t_path_list;
+
 int				depth_first_search(t_room *start);
-int		 		breadth_first_search(t_room *start, t_rooms_queue *q);
+t_rooms_queue	*breadth_first_search(t_room *start, t_rooms_queue *q);
 void			validate(int fd, int *ants, int *verteces, int *connects);
 t_room			**read_file(int fd, int verteces, int connects);
 

@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 16:37:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 22:36:41 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/22 19:59:15 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,36 @@ int		depth_first_search(t_room *start)
 	return (0);
 }
 
-int		 breadth_first_search(t_room *start, t_rooms_queue *q)
+t_rooms_queue		*get_path(t_room *start)
+{
+	t_rooms_queue *path;
+	t_rooms_queue *p;
+
+	path = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
+	p = path;
+	path->val = start;
+	start->closed = 1;
+	start = start->path;
+	while (start)
+	{
+		path->next = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
+		path = path->next;
+		path->val = start;
+		start->closed = 1;
+		start = start->path;
+		path->next = NULL;
+	}
+	return (p);
+}
+
+t_rooms_queue	*breadth_first_search(t_room *start, t_rooms_queue *q)
 {
 	t_rooms_queue *qptr;
 	int		i;
 
 	i = 0;
-	if (start->type == 4) // конечная нода
-	{
-		while (start)
-		{
-			printf("| %s |", start->name); // печатаем маршрут с конца
-			start->closed = 1; // и закрываем эти ноды
-			start = start->path;
-			++i;
-		}
-		printf("\n");
-		return (i);
-	}
+	if (start->type == 3) // конечная нода
+		return (get_path(start));
 	start->visited = 1;
 	qptr = q;
 	while (qptr->next)
@@ -62,9 +74,9 @@ int		 breadth_first_search(t_room *start, t_rooms_queue *q)
 		if (!start->links[i]->visited && !start->links[i]->closed)
 		{
 			qptr->next = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
-			qptr->next->val = start->links[i];
-			qptr->next->val->path = start; //запоминаем маршрут
 			qptr = qptr->next;
+			qptr->val = start->links[i];
+			qptr->val->path = start; //запоминаем маршрут
 			qptr->next = NULL;
 		}
 		++i;
@@ -76,6 +88,6 @@ int		 breadth_first_search(t_room *start, t_rooms_queue *q)
 		free(qptr);
 	}
 	if (!q)
-		return (0);
+		return (NULL);
 	return (breadth_first_search(q->val, q)); // переходим к следующему элементу очереди
 }
