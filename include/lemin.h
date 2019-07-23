@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:36:34 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/22 15:10:14 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/23 22:48:41 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,11 @@ typedef struct	s_room
 	struct	s_room	**links;
 }				t_room;
 
-typedef struct	s_lemin
-{
-	int				ants;
-	t_room			map;
-}				t_lemin;
-
-
 typedef struct	s_rooms_queue
 {
-	t_room			*val;
-	struct s_rooms_queue	*next;
+	t_room					*val;
+	struct s_rooms_queue	*right;
+	struct s_rooms_queue	*left;
 }				t_rooms_queue;
 
 typedef struct	s_path_list
@@ -51,9 +45,23 @@ typedef struct	s_path_list
 	struct s_path_list	*left;
 }				t_path_list;
 
-int				depth_first_search(t_room *start);
-t_rooms_queue	*breadth_first_search(t_room *start, t_rooms_queue *q);
+typedef struct	s_ants
+{
+	int					num;
+	t_room				*room;
+	t_rooms_queue		*path;
+	struct s_ants		*next;
+}				t_ants;
+
+
 void			validate(int fd, int *ants, int *verteces, int *connects);
 t_room			**read_file(int fd, int verteces, int connects);
+t_rooms_queue	*bfs(t_room *start);
+t_rooms_queue	*new_queue(t_room *start);
+void			push(t_rooms_queue **q, t_room *val);
+void			push_front(t_rooms_queue **q, t_room *val);
+void			pop(t_rooms_queue **q);
+t_path_list		*pathfinding(t_room **list_nodes);
+void			open_the_gates(t_path_list *path_list, int ants);
 
 #endif

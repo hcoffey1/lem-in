@@ -6,88 +6,53 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 16:37:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/22 19:59:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/23 22:34:30 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-int		depth_first_search(t_room *start)
+static t_rooms_queue	*get_path(t_room *end)
 {
-	t_room	*next;
-	int		i;
+	t_rooms_queue	*path;
 
-	if (start->type == 4)
+	path = new_queue(end);
+	while (end->type != 3)
 	{
-		printf("%s ", start->name);
-		return (1);
+		end = end->path;
+		end->closed = 1;
+		push_front(&path, end);
 	}
-	i = 0;
-	start->visited = 1;
-	while (i < start->edges)
-	{
-		next = start->links[i++];
-		if (!next->visited)
-			if (depth_first_search(next))
-				printf("%s ", start->name);
-	}
-	start->visited = 0;
-	return (0);
+	end->closed = 0;
+	return (path);
 }
 
-t_rooms_queue		*get_path(t_room *start)
+t_rooms_queue			*bfs(t_room *start)
 {
-	t_rooms_queue *path;
-	t_rooms_queue *p;
+	t_rooms_queue	*q;
+	int				i;
 
-	path = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
-	p = path;
-	path->val = start;
-	start->closed = 1;
-	start = start->path;
-	while (start)
-	{
-		path->next = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
-		path = path->next;
-		path->val = start;
-		start->closed = 1;
-		start = start->path;
-		path->next = NULL;
-	}
-	return (p);
-}
-
-t_rooms_queue	*breadth_first_search(t_room *start, t_rooms_queue *q)
-{
-	t_rooms_queue *qptr;
-	int		i;
-
-	i = 0;
-	if (start->type == 3) // конечная нода
-		return (get_path(start));
+	q = new_queue(start);
 	start->visited = 1;
-	qptr = q;
-	while (qptr->next)
-		qptr = qptr->next;
-	while (start->links[i]) // добавляем дочерние непосещённые и незакрытые ноды в очередь
+	while (start->type != 4) // пока не нашлась комната с типом end
 	{
-		if (!start->links[i]->visited && !start->links[i]->closed)
+		i = 0;
+		while (start->links[i])
 		{
-			qptr->next = (t_rooms_queue *)malloc(sizeof(t_rooms_queue));
-			qptr = qptr->next;
-			qptr->val = start->links[i];
-			qptr->val->path = start; //запоминаем маршрут
-			qptr->next = NULL;
+			if (!start->links[i]->visited && !start->links[i]->closed) // добавляем все связанные комнаты в очередь, кроме уже просмотренных из других комнат (visited),
+			{															//либо закрытых другими найденными путями (closed)
+				push(&q, start->links[i]);
+				start->links[i]->path = start; // отмечаем из какой комнаты пришли, чтобы потом составить маршрут
+				start->links[i]->visited = 1;
+			}
+			++i;
 		}
-		++i;
+		pop(&q); // удаляем первый элемент из очереди (текущую комнату)
+		if (!q)	// если комнат больше не осталось, значит, все уже проверены, и пути нет
+			return (NULL);
+		start = q->val;
 	}
-	while (q && q->val->visited)
-	{
-		qptr = q;
-		q = q->next;
-		free(qptr);
-	}
-	if (!q)
-		return (NULL);
-	return (breadth_first_search(q->val, q)); // переходим к следующему элементу очереди
+	while (q)
+		pop(&q);
+	return (get_path(start)); // составляем маршрут в виде очереди комнат
 }

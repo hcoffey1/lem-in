@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/21 22:19:55 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/23 20:13:32 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ static t_room	*new_room(char *line, int type)
 		exit(-1);
 	if (!*split || !*(split + 1) || !*(split + 2) || *(split + 3))
 		exit(-1);
-	new->name = ft_strdup(*split);
-	free(*split);
+	new->name = *split;
 	new->x = ft_atoi(*(split + 1));
 	free(*(split + 1));
 	new->y = ft_atoi(*(split + 2));
@@ -112,6 +111,7 @@ t_room			**read_file(int fd, int verteces, int connects)
 
 	if ((r = get_next_line(fd, &line)) <= 0)
 		exit(-1);
+	free(line);
 	if (!(rooms_list = (t_room **)malloc(sizeof(t_room *) * (verteces + 1))))
 		exit(-1);
 	*(rooms_list + verteces) = NULL;
