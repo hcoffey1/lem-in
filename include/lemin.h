@@ -6,14 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:36:34 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/23 22:48:41 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/24 21:23:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN_H
 # define LEMIN_H
 
-#include <stdio.h> //remove
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -63,5 +62,7 @@ void			push_front(t_rooms_queue **q, t_room *val);
 void			pop(t_rooms_queue **q);
 t_path_list		*pathfinding(t_room **list_nodes);
 void			open_the_gates(t_path_list *path_list, int ants);
+int				ft_printf(const char *s, ...);
+void			error(int error_type);
 
 #endif

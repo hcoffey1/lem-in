@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 16:37:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/23 22:34:30 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/24 18:53:32 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_rooms_queue			*bfs(t_room *start)
 	while (start->type != 4) // пока не нашлась комната с типом end
 	{
 		i = 0;
-		while (start->links[i])
+		while (start->links && start->links[i])
 		{
 			if (!start->links[i]->visited && !start->links[i]->closed) // добавляем все связанные комнаты в очередь, кроме уже просмотренных из других комнат (visited),
 			{															//либо закрытых другими найденными путями (closed)

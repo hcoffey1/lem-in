@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 18:32:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/23 22:29:00 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/24 23:11:45 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,17 @@ static void			print_paths(t_path_list *path_list)
 	n = 0;
 	while (path_list)
 	{
-		printf("Path %d, len %d:\n", ++n, path_list->len);
+		ft_printf("===path %d, len %d:\n", ++n, path_list->len);
 		path = path_list->path;
 		while (path)
 		{
-			printf("%s", path->val->name);
+			ft_printf("%s", path->val->name);
 			path = path->right;
-			printf(path ? "-" : "\n");
+			ft_printf(path ? "-" : "\n");
 		}
 		path_list = path_list->right;
 	}
+	ft_printf("----------------\n");
 }
 
 t_path_list			*pathfinding(t_room **list_nodes)

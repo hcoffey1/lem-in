@@ -6,12 +6,19 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/23 22:49:30 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/24 22:15:11 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 #include "get_next_line.h"
+
+void	error(int error_type)
+{
+	(void)error_type;
+	ft_printf("ERROR\n");
+	exit(-1);
+}
 
 void	cleanup(t_room **list_nodes, t_path_list *path_list)
 {
@@ -41,6 +48,21 @@ void	cleanup(t_room **list_nodes, t_path_list *path_list)
 	}
 }
 
+void	print_file(int fd)
+{
+	char	*line;
+	int		r;
+
+	while ((r = get_next_line(fd, &line)))
+	{
+		if (r < 0)
+			error(-1);
+		ft_printf("%s\n", line);
+		free(line);
+	}
+	ft_printf("\n");
+}
+
 int main(int argc, char **argv)
 {
 	t_room		**list_nodes;
@@ -58,8 +80,10 @@ int main(int argc, char **argv)
 	fd = open(*(argv + 1), O_RDONLY);
 	list_nodes = read_file(fd, verteces, connects);
 	close(fd);
+//	fd = open(*(argv + 1), O_RDONLY);
+//	print_file(fd);
+//	close(fd);
 	path_list = pathfinding(list_nodes);
-	printf("-----------------\n");
 	open_the_gates(path_list, ants);
 	cleanup(list_nodes, path_list);
 	return (0);

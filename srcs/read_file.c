@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/23 20:13:32 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/24 22:07:26 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static t_room	*new_room(char *line, int type)
 	if (type == 1)
 		type = 2;
 	if (!(new = (t_room *)malloc(sizeof(t_room))))
-		exit(-1);
+		error(-1);
 	new->links = NULL;
 	new->type = type;
 	new->edges = 0;
@@ -33,9 +33,9 @@ static t_room	*new_room(char *line, int type)
 	new->closed = 0;
 	new->path = NULL;
 	if (!(split = ft_strsplit(line, ' ')))
-		exit(-1);
+		error(-1);
 	if (!*split || !*(split + 1) || !*(split + 2) || *(split + 3))
-		exit(-1);
+		error(-1);
 	new->name = *split;
 	new->x = ft_atoi(*(split + 1));
 	free(*(split + 1));
@@ -64,7 +64,7 @@ static int		check_line(char *line)
 			if (*line++ == ' ')
 				++type;
 	if (type && type != 2)
-		exit(-1);
+		error(-1);
 	return (type);
 }
 
@@ -77,17 +77,17 @@ static void		connect(t_room **rooms_list, char *line, int connects)
 	room1 = rooms_list;
 	room2 = rooms_list;
 	if (!(split = ft_strsplit(line, '-')))
-		exit(-1);
+		error(-1);
 	if (!*split || !*(split + 1) || *(split + 2))
-		exit(-1);
+		error(-1);
 	while (*room1 && !ft_strequ((*room1)->name, *split))
 		++room1;
 	if (!(*room1))
-		exit(-1);
+		error(-1);
 	while (*room2 && !ft_strequ((*room2)->name, *(split + 1)))
 		++room2;
 	if (!*room1)
-		exit(-1);
+		error(-1);
 	if (!(*room1)->links)
 		(*room1)->links = malloc(sizeof(t_room *) * (connects + 1));
 	(*room1)->links[(*room1)->edges++] = *room2;
@@ -110,15 +110,15 @@ t_room			**read_file(int fd, int verteces, int connects)
 	int		r;
 
 	if ((r = get_next_line(fd, &line)) <= 0)
-		exit(-1);
+		error(-1);
 	free(line);
 	if (!(rooms_list = (t_room **)malloc(sizeof(t_room *) * (verteces + 1))))
-		exit(-1);
+		error(-1);
 	*(rooms_list + verteces) = NULL;
 	while ((r = get_next_line(fd, &line)))
 	{
 		if (r < 0)
-			exit(-1);
+			error(-1);
 		if (*line == '#')
 			type = check_line(line);
 		else if (verteces)
@@ -141,7 +141,7 @@ void		validate(int fd, int *ants, int *verteces, int *connects)
 	int		end;
 
 	if ((r = get_next_line(fd, &line)) <= 0)
-		exit(-1);
+		error(-1);
 	*ants = ft_atoi(line);
 	free(line);
 	*verteces = 0;
@@ -151,7 +151,7 @@ void		validate(int fd, int *ants, int *verteces, int *connects)
 	while ((r = get_next_line(fd, &line)))
 	{
 		if (r < 0)
-			exit(-1);
+			error(-1);
 		r = check_line(line);
 		if (r > 2)
 			r == 3 ? ++start : ++end;
@@ -160,6 +160,6 @@ void		validate(int fd, int *ants, int *verteces, int *connects)
 		free(line);
 	}
 	if (start != 1 || end != 1)
-		exit(-1);
+		error(-1);
 	*connects *= 2;
 }
