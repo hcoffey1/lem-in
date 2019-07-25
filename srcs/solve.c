@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/24 23:45:55 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/25 17:37:13 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,104 +27,41 @@ static t_ants	*prepare_ants(int num)
 	return (ants);
 }
 
-static void		relative_lens(t_path_list *path_list)
+static t_rooms_queue	*shortest_path(t_path_list *path_list)
 {
-	int len;
+	t_path_list	*path;
+	int			len;
 
-	len = path_list->len;
+	path = path_list;
+	while (path->right)
+		path = path->right;
+	len = path->len;
 	while (path_list)
 	{
-		path_list->len -= len;
+		if (path_list->len < len)
+		{
+			len = path_list->len;
+			path = path_list;
+		}
 		path_list = path_list->right;
 	}
+	if (path->len)
+		++path->len;
+	return (path->path);
 }
 
-static void		distribute_paths(t_ants *ants, t_path_list *path_list, int ants_num) // smorty
+static void		distribute_paths(t_ants *ants, t_path_list *path_list) // smorty
 {
 	t_path_list *p;
 	t_path_list *p0;
 
-	relative_lens(path_list);
-	(void)ants_num;
-	p = path_list;
-	while (p->right && p->len == path_list->len)
-		p = p->right;
-	p0 = path_list;
 	while (ants)
 	{
-		while (ants && path_list != p)
-		{
-			ants->path = path_list->path;
-			ants->room = ants->path->val;
-			path_list = path_list->right;
-			ants = ants->next;
-		}
-		if (ants && p && ants->num > p->len)
-			p = p->right;
-		path_list = p0;
-	}
-}
-/*
-static void		distribute_paths(t_ants *ants, t_path_list *path_list, int ants_num) // vrichese
-{
-	t_path_list	*p;
-	int			min_len;
-	int			distr;
-
-	p = path_list->right;
-	min_len = path_list->len;
-	while (ants && p)
-	{
-		distr = (ants_num / p->len) * min_len;
-		while (ants && distr--)
-		{
-			ants->path = p->path;
-			ants->room = ants->path->val;
-			ants = ants->next;
-		}
-		p = p->right;
-	}
-	while (ants)
-	{
-		ants->path = path_list->path;
+		ants->path = shortest_path(path_list);
 		ants->room = ants->path->val;
 		ants = ants->next;
 	}
-}*/
-
-/*static void		distribute_paths(t_ants *ants, t_path_list *path_list, int ants_num) // another approach
-{
-	t_path_list	*longest;
-	t_ants		*ants0;
-	int			n;
-
-	longest = path_list;
-	ants0 = ants;
-	while (ants0 && longest->right)
-	{
-		while (ants0 && ants0->num <= longest->len)
-			ants0 = ants0->next;
-		if (longest->right)
-			longest = longest->right;
-	}
-	while (ants)
-	{
-		n = longest->len - path_list->len;
-		if (!n)
-			n = 1;
-		while (n-- && ants)
-		{
-			ants->path = path_list->path;
-			ants->room = ants->path->val;
-			ants = ants->next;
-		}
-		if (!path_list->right)
-			while (path_list->left)
-				path_list = path_list->left;
-		else
-			path_list = path_list->right;
-	}
-}*/
+}
 
 static int		all_gone(t_ants *ants)
 {
@@ -145,7 +82,7 @@ static void		ants_go(t_ants *ants)
 	ants0 = ants;
 	while (!all_gone(ants0)) // пока все не находятся в последней комнате
 	{
-		ft_printf("turn %d: ", ++num); // remove
+		ft_printf("turn %3d: ", ++num); // remove
 		ants = ants0;
 		while (ants) // для каждого муравья
 		{
@@ -170,6 +107,6 @@ void			open_the_gates(t_path_list *path_list, int ants)
 	t_ants *ants_list;
 
 	ants_list = prepare_ants(ants); // собираем муравьёв в список
-	distribute_paths(ants_list, path_list, ants); // задаём каждому муравью путь
+	distribute_paths(ants_list, path_list); // задаём каждому муравью путь
 	ants_go(ants_list); // отправляем муравьёв
 }
