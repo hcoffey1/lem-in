@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/25 17:37:13 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/26 22:31:42 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_ants	*prepare_ants(int num)
 	return (ants);
 }
 
-static t_rooms_queue	*shortest_path(t_path_list *path_list)
+static t_vertexs_queue	*shortest_path(t_path_list *path_list)
 {
 	t_path_list	*path;
 	int			len;
@@ -50,7 +50,7 @@ static t_rooms_queue	*shortest_path(t_path_list *path_list)
 	return (path->path);
 }
 
-static void		distribute_paths(t_ants *ants, t_path_list *path_list) // smorty
+static void		distribute_paths(t_ants *ants, t_path_list *path_list)
 {
 	t_path_list *p;
 	t_path_list *p0;

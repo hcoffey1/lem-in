@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/24 22:07:26 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/26 22:50:39 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,18 @@
 ** type: -1 - unknown, 0 - connection, 1 - comment, 2 - vertex, 3 - start, 4 - end
 */
 
-static t_room	*new_room(char *line, int type)
+static t_vertex	*new_room(char *line, int type)
 {
-	t_room	*new;
+	t_vertex	*new;
 	char	**split;
 
 	if (type == 1)
 		type = 2;
-	if (!(new = (t_room *)malloc(sizeof(t_room))))
+	if (!(new = (t_vertex *)malloc(sizeof(t_vertex))))
 		error(-1);
-	new->links = NULL;
+	new->edges = NULL;
 	new->type = type;
-	new->edges = 0;
 	new->visited = 0;
-	new->closed = 0;
-	new->path = NULL;
 	if (!(split = ft_strsplit(line, ' ')))
 		error(-1);
 	if (!*split || !*(split + 1) || !*(split + 2) || *(split + 3))
@@ -68,10 +65,33 @@ static int		check_line(char *line)
 	return (type);
 }
 
-static void		connect(t_room **rooms_list, char *line, int connects)
+static void		new_link(t_edge **list, t_vertex *room1, t_vertex *room2)
 {
-	t_room	**room1;
-	t_room	**room2;
+	t_edge *new;
+
+	while (*list)
+	{
+		if ((*list)->left == room1)
+			(*list)->right = room2;
+		else if ((*list)->left == room2)
+			(*list)->right = room2;
+		else if ((*list)->right == room1)
+			(*list)->left = room2;
+		else if ((*list)->right == room2)
+			(*list)->left = room1;
+		++list;
+	}
+	new->dir = 0;
+	new->weight = 1;
+	new->left = room1;
+	new->right = room2;
+	new->next = NULL;
+}
+
+static void		connect(t_vertex **rooms_list, char *line, int connects)
+{
+	t_vertex	**room1;
+	t_vertex	**room2;
 	char	**split;
 
 	room1 = rooms_list;
@@ -88,31 +108,24 @@ static void		connect(t_room **rooms_list, char *line, int connects)
 		++room2;
 	if (!*room1)
 		error(-1);
-	if (!(*room1)->links)
-		(*room1)->links = malloc(sizeof(t_room *) * (connects + 1));
-	(*room1)->links[(*room1)->edges++] = *room2;
-	(*room1)->links[(*room1)->edges] = NULL;
-	if (!(*room2)->links)
-		(*room2)->links = malloc(sizeof(t_room *) * (connects + 1));
-	(*room2)->links[(*room2)->edges++] = *room1;
-	(*room2)->links[(*room2)->edges] = NULL;
+	new_link(*room1, *room2);
 	free(*split);
 	free(*(split + 1));
 	free(split);
 }
 
-t_room			**read_file(int fd, int verteces, int connects)
+t_vertex			**read_file(int fd, int verteces, int connects)
 {
 	char	*line;
-	t_room	**rooms_list;
-	t_room	*room;
+	t_vertex	**rooms_list;
+	t_vertex	*room;
 	int		type;
 	int		r;
 
 	if ((r = get_next_line(fd, &line)) <= 0)
 		error(-1);
 	free(line);
-	if (!(rooms_list = (t_room **)malloc(sizeof(t_room *) * (verteces + 1))))
+	if (!(rooms_list = (t_vertex **)malloc(sizeof(t_vertex *) * (verteces + 1))))
 		error(-1);
 	*(rooms_list + verteces) = NULL;
 	while ((r = get_next_line(fd, &line)))

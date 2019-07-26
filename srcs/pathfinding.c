@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 18:32:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/24 23:11:45 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/26 22:31:42 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static void			clear_path(t_room **list_nodes, int flag)
+static void			clear_path(t_vertex **list_nodes, int flag)
 {
 	while (*list_nodes)
 	{
@@ -24,7 +24,7 @@ static void			clear_path(t_room **list_nodes, int flag)
 	}
 }
 
-static t_path_list	*add_path(t_path_list *path_list, t_rooms_queue *path, int len)
+static t_path_list	*add_path(t_path_list *path_list, t_vertexs_queue *path, int len)
 {
 	t_path_list *new;
 
@@ -38,7 +38,7 @@ static t_path_list	*add_path(t_path_list *path_list, t_rooms_queue *path, int le
 	return (new);
 }
 
-static int			path_len(t_rooms_queue *path)
+static int			path_len(t_vertexs_queue *path)
 {
 	int len;
 
@@ -53,7 +53,7 @@ static int			path_len(t_rooms_queue *path)
 
 static void			print_paths(t_path_list *path_list)
 {
-	t_rooms_queue *path;
+	t_vertexs_queue *path;
 	int n;
 
 	n = 0;
@@ -72,18 +72,27 @@ static void			print_paths(t_path_list *path_list)
 	ft_printf("----------------\n");
 }
 
-t_path_list			*pathfinding(t_room **list_nodes)
+t_path_list			*pathfinding(t_vertex **list_nodes)
 {
 	t_path_list		*path_list;
-	t_rooms_queue	*path;
-	t_room			*start;
+	t_vertexs_queue	*path;
+	t_vertex			*start;
 	int				i;
 
 	i = 0;
 	while (list_nodes[i]->type != 3) // поиск стартовой ноды
 		++i;
 	start = list_nodes[i];
-	path_list = NULL;
+	start->minlen = 0;
+	path = bfs(start);
+	bellman_ford(list_nodes);
+	while (*list_nodes)
+	{
+		ft_printf("%d ", (*list_nodes)->minlen);
+		++list_nodes;
+	}
+//	dijkstra(start);
+/*	path_list = NULL;
 	while ((path = bfs(start))) // пока находятся новые пути, доабавляем их в список путей
 	{
 		path_list = add_path(path_list, path, path_len(path));
@@ -92,6 +101,6 @@ t_path_list			*pathfinding(t_room **list_nodes)
 	clear_path(list_nodes, 1); //удаляем отметки о закрытых комнатах
 	while (path_list->left)
 		path_list = path_list->left;
-	print_paths(path_list);
+	print_paths(path_list);*/
 	return (path_list);
 }
