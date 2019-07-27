@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 18:45:30 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 18:47:23 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ int			main(int argc, char **argv)
 	if (argc != 2)
 		return (0);
 	colony = create_ant_colony(*(argv + 1));
-/*	int i = 0;
-	int j;
+	int i = 0;
+/*	int j;
 	while (i < colony->verteces)
 	{
 		j = 0;
@@ -86,8 +86,12 @@ int			main(int argc, char **argv)
 		ft_printf("\n");
 		++i;
 	}*/
-//	i = 0;
-//	while i < list
+	i = 0;
+	while (i < colony->verteces)
+	{
+		ft_printf("%s %d\n", colony->rooms[i]->name, colony->rooms[i]->index);
+		++i;
+	}
 //	print_file(open(*(argv + 1), O_RDONLY));
 //	cleanup(list_nodes, path_list);
 	return (0);
