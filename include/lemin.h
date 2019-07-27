@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 18:35:54 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/28 00:01:06 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,30 @@
 # define LEMIN_H
 
 # include <stdlib.h>
+# include <math.h>
 # include "libft.h"
 # include "get_next_line.h"
 
-# define INF_WEIGHT	0xABCDEF
+# define INF_PATH	0xABCDEF
 
 typedef struct	s_vertex
 {
 	char			*name;
 	int				index;
 	int				type;
-	int				weight;
+	int				minpath;
 	int				x;
 	int				y;
 	int				visited;
+	struct s_vertex	*path;
 }				t_vertex;
 
 typedef struct	s_edge
 {
 	int				index;
 	int				weight;
-	int				direction;
+	int				open;
+	int				paths;
 	t_vertex		*left;
 	t_vertex		*right;
 }				t_edge;
@@ -79,5 +82,12 @@ t_vertex		**process_file(t_lemin *colony, int fd);
 int				check_line(char *line);
 void			error(int error_type);
 int				ft_printf(const char *s, ...);
+t_queue			*new_queue(t_vertex *start);
+void			push(t_queue **q, t_vertex *val);
+void			push_front(t_queue **q, t_vertex *val);
+void			pop(t_queue **q);
+t_queue			*dijkstra_algorithm(t_lemin *all);
+t_paths			*solve(t_lemin *colony);
+void			open_the_gates(t_ants *ants, t_paths *path_list);
 
 #endif

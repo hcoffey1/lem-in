@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 18:47:23 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/28 00:16:11 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,32 +66,29 @@ static void	print_file(int fd)
 int			main(int argc, char **argv)
 {
 	t_lemin *colony;
+	t_queue	*path;
+	t_paths	*path_list;
+	int n = 0;
+	int i = 0;
 
 	if (argc != 2)
 		return (0);
 	colony = create_ant_colony(*(argv + 1));
-	int i = 0;
-/*	int j;
-	while (i < colony->verteces)
+	path_list = solve(colony);
+/*	ft_printf("{red}solved:\n{eoc}");
+	while (path_list)
 	{
-		j = 0;
-		while (j < colony->verteces)
+		ft_printf("{green}path %d len %d{eoc}\n", ++n, path_list->len);
+		path = path_list->path;
+		while (path)
 		{
-		if (!(colony->adjacency[i][j]))
-			ft_printf("0 ");
-		else
-			ft_printf("1 ");
-		++j;
+			ft_printf("%s ", path->top->name);
+			pop(&path);
 		}
 		ft_printf("\n");
-		++i;
+		path_list = path_list->next;
 	}*/
-	i = 0;
-	while (i < colony->verteces)
-	{
-		ft_printf("%s %d\n", colony->rooms[i]->name, colony->rooms[i]->index);
-		++i;
-	}
+	open_the_gates(colony->ants, path_list);
 //	print_file(open(*(argv + 1), O_RDONLY));
 //	cleanup(list_nodes, path_list);
 	return (0);

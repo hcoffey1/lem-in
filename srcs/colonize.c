@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 18:34:04 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 19:22:08 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ t_lemin			*create_ant_colony(char *filename)
 	int		ants_num;
 	int		verteces;
 	int		edges;
+	int		i;
 
 	fd = open(filename, O_RDONLY);
 	validate(fd, &ants_num, &verteces, &edges);
@@ -121,6 +122,17 @@ t_lemin			*create_ant_colony(char *filename)
 	colony->adjacency = adjacency_matrix(edges);
 	colony->verteces = verteces;
 	colony->rooms = process_file(colony, fd);
+	i = 0;
+	colony->start = NULL;
+	colony->end = NULL;
+	while (!(colony->start && colony->end))
+	{
+		if (colony->rooms[i]->type == 3)
+			colony->start = colony->rooms[i];
+		else if (colony->rooms[i]->type == 4)
+			colony->end = colony->rooms[i];
+		++i;
+	}
 	colony->ants_num = ants_num;
 	colony->ants = populate_ants(colony->start, ants_num);
 	close(fd);

@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 18:41:29 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 21:58:41 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static t_vertex	*new_room(char *line, int type)
 	free(*(split + 2));
 	free(split);
 	new->type = type;
-	new->weight = INF_WEIGHT;
+	new->minpath = INF_PATH;
 	new->visited = 0;
 	new->index = n++;
 	return (new);
@@ -47,7 +47,8 @@ static t_edge	*new_link(t_vertex *room1, t_vertex *room2)
 	new = (t_edge *)malloc(sizeof(t_edge));
 	new->index = ++n;
 	new->weight = 1;
-	new->direction = 0;
+	new->open = 1;
+	new->paths = 0;
 	new->left = room1;
 	new->right = room2;
 	return (new);
@@ -57,7 +58,6 @@ static void		connect(t_edge ***adjacency, t_vertex **rooms_list, char *line)
 {
 	int			i1;
 	int			i2;
-	t_edge		*new;
 	char	**split;
 
 	if (!(split = ft_strsplit(line, '-')))
@@ -72,16 +72,10 @@ static void		connect(t_edge ***adjacency, t_vertex **rooms_list, char *line)
 		++i2;
 	if (!(rooms_list[i1] && rooms_list[i2]))
 		error(-1);
-	if (!(adjacency[i1][i2] && adjacency[i2][i1]))
-	{
-		new = new_link(rooms_list[i1], rooms_list[i2]);
-		adjacency[i1][i2] = new;
-		adjacency[i2][i1] = new;
-	}
-	else if (adjacency[i1][i2])
-		adjacency[i2][i1] = adjacency[i1][i2];
-	else if (adjacency[i2][i1])
-		adjacency[i1][i2] = adjacency[i2][i1];
+	if (!(adjacency[i1][i2]))
+		adjacency[i1][i2] = new_link(rooms_list[i1], rooms_list[i2]);
+	if (!(adjacency[i2][i1]))
+		adjacency[i2][i1] = new_link(rooms_list[i2], rooms_list[i1]);
 	free(*split);
 	free(*(split + 1));
 	free(split);
