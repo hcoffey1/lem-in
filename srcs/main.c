@@ -6,21 +6,20 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/26 22:46:03 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 18:45:30 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
-#include "get_next_line.h"
 
-void	error(int error_type)
+void		error(int error_type)
 {
 	(void)error_type;
 	ft_printf("ERROR\n");
 	exit(-1);
 }
 
-void	cleanup(t_vertex **list_nodes, t_path_list *path_list)
+/*void	cleanup(t_vertex **list_nodes, t_path_list *path_list)
 {
 	t_queue			*path;
 	void			*ptr;
@@ -46,9 +45,9 @@ void	cleanup(t_vertex **list_nodes, t_path_list *path_list)
 		path_list = path_list->right;
 		free(ptr);
 	}
-}
+}*/
 
-void	print_file(int fd)
+static void	print_file(int fd)
 {
 	char	*line;
 	int		r;
@@ -61,31 +60,35 @@ void	print_file(int fd)
 		free(line);
 	}
 	ft_printf("\n");
+	close(fd);
 }
 
-int main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
-	t_vertex		**list_nodes;
-	t_path_list *path_list;
-	int		fd;
-	int		ants;
-	int		verteces;
-	int		connects;
+	t_lemin *colony;
 
 	if (argc != 2)
 		return (0);
-	fd = open(*(argv + 1), O_RDONLY);
-	validate(fd, &ants, &verteces, &connects);
-	close(fd);
-	fd = open(*(argv + 1), O_RDONLY);
-	list_nodes = read_file(fd, verteces, connects);
-	close(fd);
-	fd = open(*(argv + 1), O_RDONLY);
-	print_file(fd);
-	close(fd);
-//	visualize_graph(list_nodes);
-	path_list = pathfinding(list_nodes);
-//	open_the_gates(path_list, ants);
+	colony = create_ant_colony(*(argv + 1));
+/*	int i = 0;
+	int j;
+	while (i < colony->verteces)
+	{
+		j = 0;
+		while (j < colony->verteces)
+		{
+		if (!(colony->adjacency[i][j]))
+			ft_printf("0 ");
+		else
+			ft_printf("1 ");
+		++j;
+		}
+		ft_printf("\n");
+		++i;
+	}*/
+//	i = 0;
+//	while i < list
+//	print_file(open(*(argv + 1), O_RDONLY));
 //	cleanup(list_nodes, path_list);
 	return (0);
 }

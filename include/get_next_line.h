@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 15:53:26 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/18 19:48:55 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 18:35:42 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <sys/types.h>
 # include <sys/uio.h>
 # include <fcntl.h>
-# include "../srcs/libft/libft.h"
+# include "libft.h"
 
 # define BUFF_SIZE 32
 

@@ -6,12 +6,16 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 15:53:17 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/27 18:35:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN_H
 # define LEMIN_H
+
+# include <stdlib.h>
+# include "libft.h"
+# include "get_next_line.h"
 
 # define INF_WEIGHT	0xABCDEF
 
@@ -20,11 +24,10 @@ typedef struct	s_vertex
 	char			*name;
 	int				index;
 	int				type;
+	int				weight;
 	int				x;
 	int				y;
 	int				visited;
-	struct s_vertex	*next;
-	struct s_vertex	*prev;
 }				t_vertex;
 
 typedef struct	s_edge
@@ -32,8 +35,8 @@ typedef struct	s_edge
 	int				index;
 	int				weight;
 	int				direction;
-	struct s_edge	*next;
-	struct s_edge	*prev;
+	t_vertex		*left;
+	t_vertex		*right;
 }				t_edge;
 
 typedef struct	s_queue
@@ -61,13 +64,20 @@ typedef struct	s_ants
 
 typedef struct	s_lemin
 {
-	t_vertex		*rooms;
-	t_edge			**adjacency;
+	int				ants_num;
+	int				verteces;
+	t_vertex		**rooms;
+	t_edge			***adjacency;
 	t_vertex		*start;
 	t_vertex		*end;
-	int				ants_num;
 	t_ants			*ants;
 	t_paths			*path_list;
 }				t_lemin;
+
+t_lemin			*create_ant_colony(char *filename);
+t_vertex		**process_file(t_lemin *colony, int fd);
+int				check_line(char *line);
+void			error(int error_type);
+int				ft_printf(const char *s, ...);
 
 #endif
