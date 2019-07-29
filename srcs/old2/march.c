@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 23:45:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/28 21:25:36 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,26 @@
 
 static t_queue	*shortest_path(t_paths *path_list)
 {
-	t_paths	*path;
+	t_paths	*shortest;
 	int		len;
 
-	path = path_list;
-	while (path->next)
-		path = path->next;
-	len = path->len;
+	len = INF_PATH;
 	while (path_list)
 	{
 		if (path_list->len < len)
 		{
 			len = path_list->len;
-			path = path_list;
+			shortest = path_list;
 		}
 		path_list = path_list->next;
 	}
-	if (path->len)
-		++path->len;
-	return (path->path);
+	if (shortest->len)
+		++shortest->len;
+	return (shortest->path);
 }
 
 static void		distribute_paths(t_ants *ants, t_paths *path_list)
 {
-	t_paths *p;
-	t_paths *p0;
-
 	while (ants)
 	{
 		ants->path = shortest_path(path_list);

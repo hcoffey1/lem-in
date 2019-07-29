@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 23:53:44 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/28 00:11:54 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/29 20:10:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_paths	*add_path(t_paths *path_list, t_queue *path, int len)
 	return (new);
 }
 
-void	apply_paths(t_lemin *colony, t_paths *path_list)
+void		apply_paths(t_lemin *colony, t_paths *path_list)
 {
 	t_queue	*path;
 	int		i;
@@ -43,7 +43,6 @@ void	apply_paths(t_lemin *colony, t_paths *path_list)
 
 	while (path_list)
 	{
-		i = 0;
 		path = path_list->path;
 		while (path->next)
 		{
@@ -55,6 +54,7 @@ void	apply_paths(t_lemin *colony, t_paths *path_list)
 		}
 		path_list = path_list->next;
 	}
+	i = 0;
 	while (i < colony->verteces)
 	{
 		j = 0;
@@ -76,15 +76,24 @@ void		finish_paths(t_lemin *colony, t_paths *path_list)
 	t_queue *path;
 	int i;
 	int j;
+	int n = 0;
 
 	while (path_list)
 	{
 		path = path_list->path;
+		ft_printf("{cyan}%d {eoc}", ++n);
 		while (path->top != colony->end)
 		{
+//			if (path->top != colony->end && path->top != colony->start)
+//				path->top->visited = 1;
+			ft_printf("%s ", path->top->name);
 			j = 0;
-			while (!colony->adjacency[path->top->index][j] && (!path->next || colony->rooms[j] != path->next->top))
+			while (j < colony->verteces && !colony->adjacency[path->top->index][j])
+			{
 				++j;
+				if (colony->rooms[j] == colony->start || (path->next && colony->rooms[j] == path->next->top))
+					continue ;
+			}
 			if (path->top != colony->end)
 			{
 				free(colony->adjacency[path->top->index][j]);
@@ -92,9 +101,20 @@ void		finish_paths(t_lemin *colony, t_paths *path_list)
 				colony->adjacency[path->top->index][j] = NULL;
 				colony->adjacency[j][path->top->index] = NULL;
 			}
-			push(&path, colony->rooms[j]);
-			++path_list->len;
+/*			if (colony->rooms[j]->visited)
+			{
+				path_list->path = NULL;
+				path_list->len = INF_PATH;
+				break ;
+			}
+			else
+			{*/
+				push(&path, colony->rooms[j]);
+				++path_list->len;
+//			}
 		}
+//		ft_printf("%s", path->top->name);
+		ft_printf("\n");
 		path_list = path_list->next;
 	}
 }
@@ -102,13 +122,15 @@ void		finish_paths(t_lemin *colony, t_paths *path_list)
 t_paths		*pathfinding(t_lemin *colony)
 {
 	t_paths	*path_list;
+	t_vertex *t;
 	int		i;
+	int n = 0;
 
 	i = 0;
 	while (i < colony->verteces)
 	{
 		if (colony->adjacency[colony->end->index][i])
-			path_list = add_path(path_list, new_queue(colony->start), 1);
+			path_list = add_path(path_list, new_queue(colony->start), 0);
 		++i;
 	}
 	finish_paths(colony, path_list);
@@ -127,6 +149,6 @@ t_paths		*solve(t_lemin *colony)
 		clear_path(colony->rooms, colony->verteces);
 	}
 	clear_path(colony->rooms, colony->verteces);
-	apply_paths(colony, path_list);
+//	apply_paths(colony, path_list);
 	return (pathfinding(colony));
 }

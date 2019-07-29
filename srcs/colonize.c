@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 19:22:08 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/29 23:19:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,18 @@ static void		validate(int fd, int *ants, int *verteces, int *edges)
 	*edges *= 2;
 }
 
-static t_edge	***adjacency_matrix(int edges)
+static int		**adjacency_matrix(int verteces)
 {
-	t_edge	***matrix;
-	int i;
+	int	**matrix;
+	int	i;
 
-	if (!(matrix = (t_edge ***)malloc(sizeof(t_edge **) * (edges + 1))))
+	if (!(matrix = (int **)malloc(sizeof(int *) * verteces)))
 		error(-1);
 	i = 0;
-	while (i < edges)
+	while (i < verteces)
 	{
-		matrix[i] = (t_edge **)malloc(sizeof(t_edge *) * (edges + 1));
-		ft_bzero(matrix[i], sizeof(matrix[i]) + sizeof(t_edge));
+		matrix[i] = (int *)malloc(sizeof(int) * verteces);
+		ft_bzero(matrix[i], sizeof(int) * verteces);
 		++i;
 	}
 	matrix[i] = NULL;
@@ -119,9 +119,10 @@ t_lemin			*create_ant_colony(char *filename)
 	fd = open(filename, O_RDONLY);
 	if (!(colony = (t_lemin *)malloc(sizeof(t_lemin))))
 		error(-1);
-	colony->adjacency = adjacency_matrix(edges);
 	colony->verteces = verteces;
+	colony->adjacency = adjacency_matrix(verteces * 2 + 1);
 	colony->rooms = process_file(colony, fd);
+	colony->verteces *= 2;
 	i = 0;
 	colony->start = NULL;
 	colony->end = NULL;

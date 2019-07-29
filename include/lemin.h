@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/28 00:01:06 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/29 23:58:50 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include "libft.h"
 # include "get_next_line.h"
 
-# define INF_PATH	0xABCDEF
+# define INF_PATH		0xABCDEF
+# define ZERO_WEIGHT	0xBBCCDD
 
 typedef struct	s_vertex
 {
@@ -31,16 +32,6 @@ typedef struct	s_vertex
 	int				visited;
 	struct s_vertex	*path;
 }				t_vertex;
-
-typedef struct	s_edge
-{
-	int				index;
-	int				weight;
-	int				open;
-	int				paths;
-	t_vertex		*left;
-	t_vertex		*right;
-}				t_edge;
 
 typedef struct	s_queue
 {
@@ -69,8 +60,8 @@ typedef struct	s_lemin
 {
 	int				ants_num;
 	int				verteces;
+	int				**adjacency;
 	t_vertex		**rooms;
-	t_edge			***adjacency;
 	t_vertex		*start;
 	t_vertex		*end;
 	t_ants			*ants;
@@ -82,12 +73,15 @@ t_vertex		**process_file(t_lemin *colony, int fd);
 int				check_line(char *line);
 void			error(int error_type);
 int				ft_printf(const char *s, ...);
+
 t_queue			*new_queue(t_vertex *start);
 void			push(t_queue **q, t_vertex *val);
 void			push_front(t_queue **q, t_vertex *val);
 void			pop(t_queue **q);
-t_queue			*dijkstra_algorithm(t_lemin *all);
-t_paths			*solve(t_lemin *colony);
-void			open_the_gates(t_ants *ants, t_paths *path_list);
+
+//void			split_vertex(t_lemin *colony, t_vertex *room);
+
+t_paths			*find_paths(t_lemin *colony);
+t_queue			*dijkstra(t_lemin *colony, int flag);
 
 #endif

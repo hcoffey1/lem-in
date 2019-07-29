@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/28 00:16:11 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/29 23:20:22 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,27 +68,22 @@ int			main(int argc, char **argv)
 	t_lemin *colony;
 	t_queue	*path;
 	t_paths	*path_list;
-	int n = 0;
+	int j = 0;
 	int i = 0;
 
 	if (argc != 2)
 		return (0);
 	colony = create_ant_colony(*(argv + 1));
-	path_list = solve(colony);
-/*	ft_printf("{red}solved:\n{eoc}");
-	while (path_list)
+/*	while (i < colony->verteces)
 	{
-		ft_printf("{green}path %d len %d{eoc}\n", ++n, path_list->len);
-		path = path_list->path;
-		while (path)
-		{
-			ft_printf("%s ", path->top->name);
-			pop(&path);
-		}
+		j = 0;
+		while (j < colony->verteces)
+			ft_printf("%d ", colony->adjacency[i][j++]);
+		++i;
 		ft_printf("\n");
-		path_list = path_list->next;
 	}*/
-	open_the_gates(colony->ants, path_list);
+	path_list = find_paths(colony);
+//	open_the_gates(colony->ants, path_list);
 //	print_file(open(*(argv + 1), O_RDONLY));
 //	cleanup(list_nodes, path_list);
 	return (0);
