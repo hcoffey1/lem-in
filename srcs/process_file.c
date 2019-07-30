@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/29 22:01:02 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 17:40:18 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static t_vertex	*new_room(char *line, int type)
 	new->type = type;
 	new->minpath = INF_PATH;
 	new->visited = 0;
+	new->visited = 0;
 	new->path = NULL;
 	return (new);
 }
@@ -55,7 +56,7 @@ t_edge	*new_link(t_vertex *room1, t_vertex *room2)
 	return (new);
 }*/
 
-static void		connect(int	**adjacency, t_vertex **rooms_list, char *line)
+static void		connect(int	**edges, t_vertex **rooms_list, char *line)
 {
 	int			i1;
 	int			i2;
@@ -73,10 +74,10 @@ static void		connect(int	**adjacency, t_vertex **rooms_list, char *line)
 		++i2;
 	if (!(rooms_list[i1] && rooms_list[i2]))
 		error(-1);
-	if (!(adjacency[i1][i2]))
-		adjacency[i1][i2] = 1;
-	if (!(adjacency[i2][i1]))
-		adjacency[i2][i1] = 1;
+	if (!(edges[i1][i2]))
+		edges[i1][i2] = 1;
+	if (!(edges[i2][i1]))
+		edges[i2][i1] = 1;
 	free(*split);
 	free(*(split + 1));
 	free(split);
@@ -117,7 +118,7 @@ t_vertex		**process_file(t_lemin *colony, int fd)
 		if (type < 0)
 			error(-1);
 		if (*line != '#')
-			connect(colony->adjacency, rooms, line);
+			connect(colony->edges, rooms, line);
 		free(line);
 	}
 	return (rooms);

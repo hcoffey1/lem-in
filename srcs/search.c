@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/29 23:58:30 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 18:39:55 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-void	split_vertex(t_lemin *colony, t_vertex *room)
+void	split_vertex(t_lemin *colony, t_vertex *room, t_vertex *prev)
 {
 	t_vertex	*new;
 	int			i;
@@ -24,29 +24,36 @@ void	split_vertex(t_lemin *colony, t_vertex *room)
 	new->path = NULL;
 	new->minpath = INF_PATH;
 	new->visited = 0;
+	new->splitted = 1;
+	room->splitted = 1;
 	new->x = 0;
 	new->y = 0;
 	colony->rooms[new->index] = new;
 	i = 0;
 	while (i < colony->verteces)
 	{
-		if (colony->adjacency[room->index][i])
+		if (colony->edges[room->index][i])
 		{
-			if (room->path != colony->rooms[i])
+			if (colony->rooms[i] == prev)
 			{
-				colony->adjacency[i][new->index] = colony->adjacency[i][room->index];
-				colony->adjacency[i][room->index] = 0;
+				colony->edges[i][room->index] = colony->edges[i][room->index] * -1;
+				colony->edges[room->index][i] = 0;
 			}
-			else
+			else if (colony->rooms[i] == room->path)
 			{
-				colony->adjacency[new->index][i] = colony->adjacency[room->index][i] * -1;
-				colony->adjacency[room->index][i] = 0;
-				colony->adjacency[i][room->index] = 0;
+				colony->edges[new->index][i] = colony->edges[room->index][i] * -1;
+				colony->edges[room->index][i] = 0;
+				colony->edges[i][room->index] = 0;
+			}
+			else if (!colony->rooms[i]->splitted)
+			{
+				colony->edges[i][new->index] = colony->edges[i][room->index];
+				colony->edges[i][room->index] = 0;
 			}
 		}
 		++i;
 	}
-	colony->adjacency[room->index][new->index] = ZERO_WEIGHT;
+	colony->edges[room->index][new->index] = ZERO_WEIGHT;
 }
 
 void	clear_path(t_vertex **rooms, int verteces)
@@ -60,7 +67,7 @@ void	clear_path(t_vertex **rooms, int verteces)
 		}
 }
 
-t_queue	*get_path(t_lemin *colony, int flag)
+t_queue	*get_path(t_lemin *colony)
 {
 	t_vertex	*track;
 	t_queue		*path;
@@ -69,14 +76,9 @@ t_queue	*get_path(t_lemin *colony, int flag)
 	track = colony->end->path;
 	while (track->path)
 	{
+		if (!track->splitted)
+			split_vertex(colony, track, path->top);
 		push_front(&path, track);
-		if (flag)
-		{
-			if (colony->adjacency[path->top->index][track->index] != ZERO_WEIGHT)
-				colony->adjacency[path->top->index][track->index] = colony->adjacency[path->top->index][track->index] * -1;
-			colony->adjacency[track->index][path->top->index] = 0;
-			split_vertex(colony, track);
-		}
 		track = track->path;
 	}
 	push_front(&path, track);
@@ -84,7 +86,7 @@ t_queue	*get_path(t_lemin *colony, int flag)
 	return (path);
 }
 
-t_queue	*dijkstra(t_lemin *colony, int flag)
+t_queue	*dijkstra(t_lemin *colony)
 {
 	t_queue	*q;
 	int		parent;
@@ -101,9 +103,9 @@ t_queue	*dijkstra(t_lemin *colony, int flag)
 		child = 0;
 		while (child < colony->verteces)
 		{
-			if (colony->adjacency[parent][child] && !colony->rooms[child]->visited)
+			if (colony->edges[parent][child] && !colony->rooms[child]->visited)
 			{
-				distance = colony->adjacency[parent][child] == ZERO_WEIGHT ? 0 : colony->adjacency[parent][child];
+				distance = colony->edges[parent][child] == ZERO_WEIGHT ? 0 : colony->edges[parent][child];
 				distance += q->top->minpath;
 				if (colony->rooms[child]->minpath > distance)
 				{
@@ -121,5 +123,5 @@ t_queue	*dijkstra(t_lemin *colony, int flag)
 	}
 	while (q)
 		pop(&q);
-	return (get_path(colony, flag));
+	return (get_path(colony));
 }

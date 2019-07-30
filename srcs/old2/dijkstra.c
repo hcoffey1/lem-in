@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 18:59:18 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/29 20:29:39 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ t_queue		*get_path(t_lemin *colony)
 	while (p != colony->start)
 	{
 		ft_printf("%s ", p->name);
-//		colony->adjacency[p->path->index][p->index]->open = 0;
-  //      colony->adjacency[p->path->index][p->index]->weight *= -1;
-    //    colony->adjacency[p->index][p->path->index]->weight *= -1;
+//		colony->edges[p->path->index][p->index]->open = 0;
+  //      colony->edges[p->path->index][p->index]->weight *= -1;
+    //    colony->edges[p->index][p->path->index]->weight *= -1;
 		if (p != colony->end)
 			split_vertex(colony, p);
 		p = p->path;
@@ -50,11 +50,11 @@ t_queue		*dijkstra_algorithm(t_lemin *all)
         parent = queue->top->index;
         while (child < all->verteces)
         {
-            if (all->adjacency[parent][child] && all->adjacency[parent][child]->open && !all->rooms[child]->visited)
+            if (all->edges[parent][child] && all->edges[parent][child]->open && !all->rooms[child]->visited)
             {
-                if (all->adjacency[parent][child]->weight + all->rooms[parent]->minpath < all->rooms[child]->minpath)
+                if (all->edges[parent][child]->weight + all->rooms[parent]->minpath < all->rooms[child]->minpath)
 				{
-                    all->rooms[child]->minpath = all->adjacency[parent][child]->weight + all->rooms[parent]->minpath;
+                    all->rooms[child]->minpath = all->edges[parent][child]->weight + all->rooms[parent]->minpath;
 					all->rooms[child]->path = all->rooms[parent];
 				}
 				all->rooms[child]->visited = 1;
@@ -79,7 +79,7 @@ t_queue		*dijkstra_algorithm(t_lemin *all)
 	start->visited = 1;
 	while (start->type != 4) // пока не нашлась комната с типом end
 	{
-		while (->adjacency[])
+		while (->edges[])
 		{
 			if (!p->link->visited && !p->link->closed) // добавляем все связанные комнаты в очередь, кроме уже просмотренных из других комнат (visited),
 			{															//либо закрытых другими найденными путями (closed)
@@ -115,10 +115,10 @@ t_queue            *bellman_ford_algorithm(t_lemin *ant_farm)
             child = 0;
             while (child < ant_farm->verteces)
             {
-                if (ant_farm->adjacency[parent][child])
+                if (ant_farm->edges[parent][child])
                 {
-                    if (ant_farm->adjacency[parent][child]->weight + ant_farm->rooms[vertex]->minpath < ant_farm->rooms[child]->minpath)
-                        ant_farm->rooms[child]->minpath = ant_farm->adjacency[parent][child]->weight + ant_farm->rooms[vertex]->minpath;
+                    if (ant_farm->edges[parent][child]->weight + ant_farm->rooms[vertex]->minpath < ant_farm->rooms[child]->minpath)
+                        ant_farm->rooms[child]->minpath = ant_farm->edges[parent][child]->weight + ant_farm->rooms[vertex]->minpath;
                    	ant_farm->rooms[child]->path = ant_farm->rooms[parent];
                	}
                 ++child;
@@ -144,10 +144,10 @@ t_queue            *bellman_ford_algorithm(t_lemin *ant_farm)
         child = 0;
         while (child < ant_farm->verteces)
         {
-            if (ant_farm->adjacency[parent][child])
+            if (ant_farm->edges[parent][child])
             {
-                if (ant_farm->adjacency[parent][child]->weight + ant_farm->rooms[parent]->minpath < ant_farm->rooms[child]->minpath)
-                    ant_farm->rooms[child]->minpath = ant_farm->adjacency[parent][child]->weight + ant_farm->rooms[parent]->minpath;
+                if (ant_farm->edges[parent][child]->weight + ant_farm->rooms[parent]->minpath < ant_farm->rooms[child]->minpath)
+                    ant_farm->rooms[child]->minpath = ant_farm->edges[parent][child]->weight + ant_farm->rooms[parent]->minpath;
                	ant_farm->rooms[child]->path = ant_farm->rooms[parent];
           	}
             ++child;

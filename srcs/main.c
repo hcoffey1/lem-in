@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/29 23:20:22 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int			main(int argc, char **argv)
 	{
 		j = 0;
 		while (j < colony->verteces)
-			ft_printf("%d ", colony->adjacency[i][j++]);
+			ft_printf("%d ", colony->edges[i][j++]);
 		++i;
 		ft_printf("\n");
 	}*/

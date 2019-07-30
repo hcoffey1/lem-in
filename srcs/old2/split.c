@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 19:09:04 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/29 20:30:52 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ void	split_vertex(t_lemin *colony, t_vertex *room)
 	j = 0;
 	while (j < colony->verteces)
 	{
-		if (colony->adjacency[i][j])
+		if (colony->edges[i][j])
 		{
 			if (colony->rooms[j] == colony->end)
-				colony->adjacency[i][j] = NULL;
+				colony->edges[i][j] = NULL;
 			else
 			{
-				colony->adjacency[j][new->index] = colony->adjacency[j][i];
-				colony->adjacency[j][i] = NULL;
+				colony->edges[j][new->index] = colony->edges[j][i];
+				colony->edges[j][i] = NULL;
 			}
 		}
 		++j;
 	}
-	colony->adjacency[i][new->index] = new_link(room, new);
+	colony->edges[i][new->index] = new_link(room, new);
 }
