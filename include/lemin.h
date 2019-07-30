@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 18:19:13 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 23:25:17 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 
 # define INF_PATH		0xABCDEF
 # define ZERO_WEIGHT	0xBBCCDD
+# define ABS(x) (x > 0 ? x : -x)
 
 typedef struct	s_vertex
 {
@@ -80,11 +81,12 @@ void			push(t_queue **q, t_vertex *val);
 void			push_front(t_queue **q, t_vertex *val);
 void			pop(t_queue **q);
 
-//void			split_vertex(t_lemin *colony, t_vertex *room);
+
 void			clear_path(t_vertex **rooms, int verteces);
 t_paths			*find_paths(t_lemin *colony);
 t_queue			*dijkstra(t_lemin *colony);
 t_queue			*bellman_ford_algorithm(t_lemin *ant_farm);
 t_queue			*get_path(t_lemin *colony);
+void			open_the_gates(t_ants *ants, t_paths *path_list);
 
 #endif

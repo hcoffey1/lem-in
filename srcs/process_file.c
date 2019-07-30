@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 17:40:18 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 21:37:15 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_vertex	*new_room(char *line, int type)
 	new->type = type;
 	new->minpath = INF_PATH;
 	new->visited = 0;
-	new->visited = 0;
+	new->splitted = 0;
 	new->path = NULL;
 	return (new);
 }

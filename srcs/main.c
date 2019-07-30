@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/30 23:24:49 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int			main(int argc, char **argv)
 		ft_printf("\n");
 	}*/
 	path_list = find_paths(colony);
-//	open_the_gates(colony->ants, path_list);
+	open_the_gates(colony->ants, path_list);
 //	print_file(open(*(argv + 1), O_RDONLY));
 //	cleanup(list_nodes, path_list);
 	return (0);
