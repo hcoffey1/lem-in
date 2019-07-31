@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/31 18:36:27 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ static void		validate(int fd, int *ants, int *verteces, int *edges)
 	}
 	if (start != 1 || end != 1)
 		error(-1);
-	*edges *= 2;
 }
 
 static int		**edges_matrix(int verteces)
@@ -76,7 +75,7 @@ static int		**edges_matrix(int verteces)
 	int	**matrix;
 	int	i;
 
-	if (!(matrix = (int **)malloc(sizeof(int *) * verteces)))
+	if (!(matrix = (int **)malloc(sizeof(int *) * (verteces + 1))))
 		error(-1);
 	i = 0;
 	while (i < verteces)
@@ -120,9 +119,8 @@ t_lemin			*create_ant_colony(char *filename)
 	if (!(colony = (t_lemin *)malloc(sizeof(t_lemin))))
 		error(-1);
 	colony->verteces = verteces;
-	colony->edges = edges_matrix(verteces * 2 + 1);
+	colony->edges = edges_matrix(verteces);
 	colony->rooms = process_file(colony, fd);
-	colony->verteces *= 2;
 	i = 0;
 	colony->start = NULL;
 	colony->end = NULL;

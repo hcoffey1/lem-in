@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 23:25:17 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/31 23:06:22 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ typedef struct	s_vertex
 	int				minpath;
 	int				x;
 	int				y;
-	int				visited;
 	int				splitted;
+	int				closed;
 	struct s_vertex	*path;
 }				t_vertex;
 
@@ -84,9 +84,9 @@ void			pop(t_queue **q);
 
 void			clear_path(t_vertex **rooms, int verteces);
 t_paths			*find_paths(t_lemin *colony);
-t_queue			*dijkstra(t_lemin *colony);
+t_queue			*dijkstra(t_lemin *colony, int *len);
 t_queue			*bellman_ford_algorithm(t_lemin *ant_farm);
-t_queue			*get_path(t_lemin *colony);
-void			open_the_gates(t_ants *ants, t_paths *path_list);
+t_queue			*get_path(t_lemin *colony, int *len);
+int				open_the_gates(t_ants *ants, t_paths *path_list);
 
 #endif

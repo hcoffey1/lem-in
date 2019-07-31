@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 21:37:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/07/31 21:31:15 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static t_vertex	*new_room(char *line, int type)
+static t_vertex	*new_room(char *line, int type, int verteces)
 {
 	static int	n = 0;
 	t_vertex	*new;
@@ -35,8 +35,8 @@ static t_vertex	*new_room(char *line, int type)
 	new->index = n++;
 	new->type = type;
 	new->minpath = INF_PATH;
-	new->visited = 0;
 	new->splitted = 0;
+	new->closed = 0;
 	new->path = NULL;
 	return (new);
 }
@@ -95,9 +95,9 @@ t_vertex		**process_file(t_lemin *colony, int fd)
 		error(-1);
 	free(line);
 	verteces = colony->verteces;
-	if (!(rooms = (t_vertex **)malloc(sizeof(t_vertex *) * (verteces * 2 + 1))))
+	if (!(rooms = (t_vertex **)malloc(sizeof(t_vertex *) * verteces)))
 		error(-1);
-	ft_bzero(rooms, sizeof(t_vertex *) * (verteces * 2 + 1));
+	ft_bzero(rooms, sizeof(t_vertex *) * verteces);
 	while (verteces)
 	{
 		if (get_next_line(fd, &line) <= 0)
@@ -106,7 +106,7 @@ t_vertex		**process_file(t_lemin *colony, int fd)
 			type = check_line(line);
 		else
 		{
-			new = new_room(line, type);
+			new = new_room(line, type, colony->verteces);
 			rooms[new->index] = new;
 			type = 2;
 			--verteces;
