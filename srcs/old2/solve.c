@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 23:53:44 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/30 17:30:01 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 22:08:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-void	clear_path(t_vertex **list, int size)
+void	clean_after_search(t_vertex **list, int size)
 {
 	while (size--)
 	{
@@ -146,9 +146,9 @@ t_paths		*solve(t_lemin *colony)
 	while ((path = dijkstra_algorithm(colony)))
 	{
 		path_list = add_path(path_list, path, 0);
-		clear_path(colony->rooms, colony->verteces);
+		clean_after_search(colony->rooms, colony->verteces);
 	}
-	clear_path(colony->rooms, colony->verteces);
+	clean_after_search(colony->rooms, colony->verteces);
 //	apply_paths(colony, path_list);
 	return (pathfinding(colony));
 }

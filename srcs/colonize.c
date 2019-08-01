@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 18:36:27 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:33:08 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ t_lemin			*create_ant_colony(char *filename)
 	int		ants_num;
 	int		verteces;
 	int		edges;
-	int		i;
 
 	fd = open(filename, O_RDONLY);
 	validate(fd, &ants_num, &verteces, &edges);
@@ -119,20 +118,10 @@ t_lemin			*create_ant_colony(char *filename)
 	if (!(colony = (t_lemin *)malloc(sizeof(t_lemin))))
 		error(-1);
 	colony->verteces = verteces;
-	colony->edges = edges_matrix(verteces);
-	colony->rooms = process_file(colony, fd);
-	i = 0;
-	colony->start = NULL;
-	colony->end = NULL;
-	while (!(colony->start && colony->end))
-	{
-		if (colony->rooms[i]->type == 3)
-			colony->start = colony->rooms[i];
-		else if (colony->rooms[i]->type == 4)
-			colony->end = colony->rooms[i];
-		++i;
-	}
 	colony->ants_num = ants_num;
+	colony->edges = edges_matrix(verteces);
+	colony->start = NULL;
+	colony->rooms = process_file(colony, fd);
 	colony->ants = populate_ants(colony->start, ants_num);
 	close(fd);
 	return (colony);

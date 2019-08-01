@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 17:06:53 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/27 19:02:11 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:05:13 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ t_queue *new_queue(t_vertex *start)
 {
 	t_queue *new;
 
-	new = (t_queue *)malloc(sizeof(t_queue));
+	if (!(new = (t_queue *)malloc(sizeof(t_queue))))
+		error(-1);
 	new->top = start;
 	new->next = NULL;
 	new->prev = NULL;
@@ -27,7 +28,8 @@ void	push(t_queue **q, t_vertex *val)
 {
 	while ((*q)->next)
 		*q = (*q)->next;
-	(*q)->next = (t_queue *)malloc(sizeof(t_queue));
+	if (!((*q)->next = (t_queue *)malloc(sizeof(t_queue))))
+		error(-1);
 	(*q)->next->prev = *q;
 	(*q) = (*q)->next;
 	(*q)->top = val;
@@ -38,7 +40,8 @@ void	push_front(t_queue **q, t_vertex *val)
 {
 	while ((*q)->prev)
 		*q = (*q)->prev;
-	(*q)->prev = (t_queue *)malloc(sizeof(t_queue));
+	if (!((*q)->prev = (t_queue *)malloc(sizeof(t_queue))))
+		error(-1);
 	(*q)->prev->next = *q;
 	*q = (*q)->prev;
 	(*q)->top = val;

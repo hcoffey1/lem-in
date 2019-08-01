@@ -6,20 +6,18 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 21:31:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:35:30 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static t_vertex	*new_room(char *line, int type, int verteces)
+static t_vertex	*new_room(char *line, int verteces)
 {
 	static int	n = 0;
 	t_vertex	*new;
 	char		**split;
 
-	if (type == 1)
-		type = 2;
 	if (!(new = (t_vertex *)malloc(sizeof(t_vertex))))
 		error(-1);
 	if (!(split = ft_strsplit(line, ' ')))
@@ -33,34 +31,18 @@ static t_vertex	*new_room(char *line, int type, int verteces)
 	free(*(split + 2));
 	free(split);
 	new->index = n++;
-	new->type = type;
 	new->minpath = INF_PATH;
 	new->splitted = 0;
 	new->closed = 0;
 	new->path = NULL;
 	return (new);
 }
-/*
-t_edge	*new_link(t_vertex *room1, t_vertex *room2)
-{
-	static int	n = 0;
-	t_edge		*new;
-
-	new = (t_edge *)malloc(sizeof(t_edge));
-	new->index = ++n;
-	new->weight = 1;
-	new->open = 1;
-	new->paths = 0;
-	new->left = room1;
-	new->right = room2;
-	return (new);
-}*/
 
 static void		connect(int	**edges, t_vertex **rooms_list, char *line)
 {
+	char	**split;
 	int			i1;
 	int			i2;
-	char	**split;
 
 	if (!(split = ft_strsplit(line, '-')))
 		error(-1);
@@ -97,7 +79,7 @@ t_vertex		**process_file(t_lemin *colony, int fd)
 	verteces = colony->verteces;
 	if (!(rooms = (t_vertex **)malloc(sizeof(t_vertex *) * verteces)))
 		error(-1);
-	ft_bzero(rooms, sizeof(t_vertex *) * verteces);
+	type = 2;
 	while (verteces)
 	{
 		if (get_next_line(fd, &line) <= 0)
@@ -106,10 +88,14 @@ t_vertex		**process_file(t_lemin *colony, int fd)
 			type = check_line(line);
 		else
 		{
-			new = new_room(line, type, colony->verteces);
+			new = new_room(line, colony->verteces);
+			if (type == 3)
+				colony->start = new;
+			else if (type == 4)
+				colony->end = new;
 			rooms[new->index] = new;
-			type = 2;
 			--verteces;
+			type = 2;
 		}
 		free(line);
 	}

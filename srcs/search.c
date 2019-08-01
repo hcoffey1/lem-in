@@ -6,24 +6,63 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 22:51:11 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 22:08:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-void	clear_path(t_vertex **rooms, int verteces)
+static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 {
-	while (verteces--)
-		if (rooms[verteces])
-		{
-			rooms[verteces]->closed = 0;
-			rooms[verteces]->minpath = INF_PATH;
-			rooms[verteces]->path = NULL;
-		}
+	t_vertex	*track;
+	t_queue		*path;
+
+	*len = 0;
+	path = new_queue(colony->end);
+	track = colony->end->path;
+	while (track)
+	{
+		colony->edges[track->index][path->top->index] = 0;
+		colony->edges[path->top->index][track->index] = 0;
+		push_front(&path, track);
+		track = track->path;
+		++(*len);
+	}
+	clean_after_search(colony->rooms, colony->verteces);
+	return (path);
 }
 
-t_queue	*get_path(t_lemin *colony, int *len)
+t_queue			*bfs(t_lemin *colony, int *len)
+{
+	t_queue	*q;
+	int		parent;
+	int		child;
+
+	q = new_queue(colony->start);
+	while (q->top != colony->end)
+	{
+		if (!q->top->closed)
+		{
+			q->top->closed = 1;
+			parent = q->top->index;
+			child = -1;
+			while (++child < colony->verteces)
+				if (colony->edges[parent][child] && !colony->rooms[child]->closed)
+				{
+					colony->rooms[child]->path = colony->rooms[parent];
+					push(&q, colony->rooms[child]);
+				}
+		}
+		pop(&q);
+		if (!q)
+			return (NULL);
+	}
+	while (q)
+		pop(&q);
+	return (get_path_bfs(colony, len));
+}
+
+static t_queue	*get_path_dijkstra(t_lemin *colony, int *len)
 {
 	t_vertex	*track;
 	t_queue		*path;
@@ -41,69 +80,53 @@ t_queue	*get_path(t_lemin *colony, int *len)
 		++(*len);
 	}
 	colony->start->splitted = 0;
-	clear_path(colony->rooms, colony->verteces);
+	clean_after_search(colony->rooms, colony->verteces);
 	return (path);
 }
 
-void		print_queue(t_queue *q)
+static void		relax_and_push(t_lemin *colony, t_queue *q, int parent, int child)
 {
-	while (q->prev)
-		q = q->prev;
+	int weight;
+
+	if (!colony->rooms[parent]->splitted
+		|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
+			&& (colony->rooms[parent]->path->splitted
+				|| colony->edges[parent][child] < 0)))
+	{
+		weight = colony->edges[parent][child] + colony->rooms[parent]->minpath;
+		if (weight < colony->rooms[child]->minpath)
+		{
+			colony->rooms[child]->minpath = weight;
+			colony->rooms[child]->path = colony->rooms[parent];
+		}
+		push(&q, colony->rooms[child]);
+	}
+}
+
+t_queue			*dijkstra(t_lemin *colony, int *len)
+{
+	t_queue	*q;
+	int		parent;
+	int		child;
+
+	q = new_queue(colony->start);
+	colony->start->minpath = 0;
+	while (q->top != colony->end)
+	{
+		if (!q->top->closed)
+		{
+			q->top->closed = 1;
+			parent = q->top->index;
+			child = -1;
+			while (++child < colony->verteces)
+				if (colony->edges[parent][child] && !colony->rooms[child]->closed)
+					relax_and_push(colony, q, parent, child);
+		}
+		pop(&q);
+		if (!q)
+			return (NULL);
+	}
 	while (q)
-	{
-		ft_printf("%s ", q->top->name);
-		q = q->next;
-	}
-	ft_printf("\n");
-}
-
-int        relax(int **edges, t_vertex **rooms, int parent, int child)
-{
-    if (edges[parent][child] + rooms[parent]->minpath < rooms[child]->minpath)
-	{
-        rooms[child]->minpath = edges[parent][child] + rooms[parent]->minpath;
-		rooms[child]->path = rooms[parent];
-		return (1);
-	}
-	return (0);
-}
-
-t_queue    *dijkstra(t_lemin *colony, int *len)
-{
-    t_queue    *q;
-    t_queue    *p;
-    int        parent;
-    int        child;
-    int        distance;
-
-    q = new_queue(colony->start);
-    colony->start->minpath = 0;
-	colony->start->closed = 1;
-    while (q->top != colony->end)
-    {
-        parent = q->top->index;
-        child = 0;
-        while (child < colony->verteces)
-        {
-            if (colony->edges[parent][child] && !colony->rooms[child]->closed)
-			{
-				if (!colony->rooms[parent]->splitted
-				|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path && colony->rooms[parent]->path->splitted)
-				|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path && !colony->rooms[parent]->path->splitted && colony->edges[parent][child] < 0))
-				{
-					relax(colony->edges, colony->rooms, parent, child);
-					push(&q, colony->rooms[child]);
-				}
-				colony->rooms[child]->closed = 1;
-			}
-			++child;
-        }
-//		print_queue(q);
-        pop(&q);
-        if (!q)
-            return (NULL);
-    }
-    while (q)
-        pop(&q);
-    return (get_path(colony, len));
+		pop(&q);
+	return (get_path_dijkstra(colony, len));
 }

@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 23:56:56 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:37:33 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,25 +66,12 @@ static void	print_file(int fd)
 int			main(int argc, char **argv)
 {
 	t_lemin *colony;
-	t_queue	*path;
-	t_paths	*path_list;
-	int j = 0;
-	int i = 0;
 
 	if (argc != 2)
 		return (0);
 	colony = create_ant_colony(*(argv + 1));
-/*	while (i < colony->verteces)
-	{
-		j = 0;
-		while (j < colony->verteces)
-			ft_printf("%d ", colony->edges[i][j++]);
-		++i;
-		ft_printf("\n");
-	}*/
-	path_list = find_paths(colony);
-//	open_the_gates(colony->ants, path_list);
-//	print_file(open(*(argv + 1), O_RDONLY));
+	print_file(open(*(argv + 1), O_RDONLY));
+	open_the_gates(colony, find_paths(colony));
 //	cleanup(list_nodes, path_list);
 	return (0);
 }

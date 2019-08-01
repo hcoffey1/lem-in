@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 23:06:22 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:15:24 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,12 @@
 # include "get_next_line.h"
 
 # define INF_PATH		0xABCDEF
-# define ZERO_WEIGHT	0xBBCCDD
 # define ABS(x) (x > 0 ? x : -x)
 
 typedef struct	s_vertex
 {
 	char			*name;
 	int				index;
-	int				type;
 	int				minpath;
 	int				x;
 	int				y;
@@ -46,6 +44,7 @@ typedef struct	s_paths
 {
 	t_queue			*path;
 	int				len;
+	int				len0;
 	struct s_paths	*next;
 	struct s_paths	*prev;
 }				t_paths;
@@ -67,7 +66,6 @@ typedef struct	s_lemin
 	t_vertex		*start;
 	t_vertex		*end;
 	t_ants			*ants;
-	t_paths			*path_list;
 }				t_lemin;
 
 t_lemin			*create_ant_colony(char *filename);
@@ -81,12 +79,10 @@ void			push(t_queue **q, t_vertex *val);
 void			push_front(t_queue **q, t_vertex *val);
 void			pop(t_queue **q);
 
-
-void			clear_path(t_vertex **rooms, int verteces);
+void			clean_after_search(t_vertex **rooms, int verteces);
 t_paths			*find_paths(t_lemin *colony);
 t_queue			*dijkstra(t_lemin *colony, int *len);
-t_queue			*bellman_ford_algorithm(t_lemin *ant_farm);
-t_queue			*get_path(t_lemin *colony, int *len);
-int				open_the_gates(t_ants *ants, t_paths *path_list);
+t_queue			*bfs(t_lemin *colony, int *len);
+void			open_the_gates(t_lemin *colony, t_paths *path_list);
 
 #endif

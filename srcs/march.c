@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/31 23:56:32 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 23:40:26 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ static t_queue	*shortest_path(t_paths *path_list)
 	len = INF_PATH;
 	while (path_list)
 	{
-		if (path_list->len < len)
+		if (path_list->len0 < len)
 		{
-			len = path_list->len;
+			len = path_list->len0;
 			shortest = path_list;
 		}
 		path_list = path_list->next;
 	}
-	if (shortest->len)
-		++shortest->len;
+	if (shortest->len0)
+		++shortest->len0;
 	return (shortest->path);
 }
 
@@ -42,44 +42,44 @@ static void		distribute_paths(t_ants *ants, t_paths *path_list)
 	}
 }
 
-static int		all_gone(t_ants *ants)
+static int		all_gone(t_ants *ants, t_vertex *end)
 {
 	while (ants)
 	{
-		if (ants->room->type != 4)
+		if (ants->room != end)
 			return (0);
 		ants = ants->next;
 	}
 	return (1);
 }
 
-int		open_the_gates(t_ants *ants, t_paths *path_list)
+void		open_the_gates(t_lemin *colony, t_paths *path_list)
 {
-	t_ants *ants0;
-	int num = 0;
+	t_ants	*ants;
+	int		num;
 
-	distribute_paths(ants, path_list);
-	ants0 = ants;
-	while (!all_gone(ants0)) // пока все не находятся в последней комнате
+	distribute_paths(colony->ants, path_list);
+	num = 0;
+	while (!all_gone(colony->ants, colony->end)) // пока все не находятся в последней комнате
 	{
-//		ft_printf("{magenta}turn %3d: {eoc}", ++num); // remove
 		++num;
-		ants = ants0;
+		ft_printf("{magenta}turn %3d:\n{eoc}", num); // remove
+		ants = colony->ants;
 		while (ants) // для каждого муравья
 		{
-			if (ants->room->type != 4 && !ants->path->next->top->closed) // если текущая комната муравья не последняя и следующая не занята
+			if (ants->room != colony->end && !ants->path->next->top->closed) // если текущая комната муравья не последняя и следующая не занята
 			{
-//				ft_printf("L%d-", ants->num);
+				ft_printf("L%d-", ants->num);
 				ants->room->closed = 0; // открываем текующую комнату
 				ants->path = ants->path->next; // переходим к следующей
 				ants->room = ants->path->top;
-				if (ants->room->type != 4) // и закрываем её
+				if (ants->room != colony->end) // и закрываем её
 					ants->room->closed = 1;
-//				ft_printf("%s ", ants->room->name);
+				ft_printf("%s ", ants->room->name);
 			}
 			ants = ants->next;
 		}
+		ft_printf("\n");
 	}
-	ft_printf("%d\n", num);
-	return (num);
+//	ft_printf("{cyan}%d{eoc}\n", num);
 }

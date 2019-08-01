@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 18:32:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/07/26 22:31:42 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/01 22:08:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static void			clear_path(t_vertex **list_nodes, int flag)
+static void			clean_after_search(t_vertex **list_nodes, int flag)
 {
 	while (*list_nodes)
 	{
@@ -96,9 +96,9 @@ t_path_list			*pathfinding(t_vertex **list_nodes)
 	while ((path = bfs(start))) // пока находятся новые пути, доабавляем их в список путей
 	{
 		path_list = add_path(path_list, path, path_len(path));
-		clear_path(list_nodes, 0); //удаляем отметки о просмотренных комнатах
+		clean_after_search(list_nodes, 0); //удаляем отметки о просмотренных комнатах
 	}
-	clear_path(list_nodes, 1); //удаляем отметки о закрытых комнатах
+	clean_after_search(list_nodes, 1); //удаляем отметки о закрытых комнатах
 	while (path_list->left)
 		path_list = path_list->left;
 	print_paths(path_list);*/
