@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/01 23:37:33 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/03 21:54:10 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ static void	print_file(int fd)
 		ft_printf("%s\n", line);
 		free(line);
 	}
-	ft_printf("\n");
-	close(fd);
+ 	close(fd);
 }
 
 int			main(int argc, char **argv)
@@ -70,8 +69,8 @@ int			main(int argc, char **argv)
 	if (argc != 2)
 		return (0);
 	colony = create_ant_colony(*(argv + 1));
-	print_file(open(*(argv + 1), O_RDONLY));
-	open_the_gates(colony, find_paths(colony));
+//	print_file(open(*(argv + 1), O_RDONLY));
+	open_the_gates(colony, find_paths(colony), 0);
 //	cleanup(list_nodes, path_list);
 	return (0);
 }

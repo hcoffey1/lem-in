@@ -15,21 +15,20 @@ l 7 8
 ##end
 m 12 4
 n 12 8
-a-b
-b-e
-e-g
-g-j
-j-m
-#comment
-a-d
-d-i
-i-j
+b-a
 b-c
+b-e
+a-d
 c-f
-f-g
+e-g
 e-h
+d-i
+f-g
 h-l
+i-j
+j-m
+g-j
+g-k
 l-n
 n-m
-g-k
 k-m

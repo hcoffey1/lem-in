@@ -6,11 +6,48 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 21:17:41 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/01 23:37:56 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 00:08:07 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
+
+void		sort_list(t_paths *list)
+{
+	t_paths *left;
+	t_paths	*right;
+	t_paths *list0;
+
+	list0 = list;
+	while (list->next)
+	{
+		if (list->len > list->next->len)
+		{
+			left = list->prev;
+			right = list->next->next;
+			if (left)
+				left->next = list->next;
+			if (right)
+				right->prev = list;
+			list->next->next = list;
+			list->next->prev = left;
+			list->prev = list->next;
+			list->next = right;
+			list = list0;
+		}
+		list = list->next;
+	}
+}
+
+void		print_path(t_queue *path)
+{
+	while (path)
+	{
+		ft_printf("%s ", path->top->name);
+		path = path->next;
+	}
+	ft_printf("\n");
+}
 
 void		clean_after_search(t_vertex **rooms, int verteces)
 {
@@ -34,13 +71,13 @@ void		apply_paths(t_lemin *colony, t_paths *path_list)
 	while (i < colony->verteces)
 		ft_bzero(colony->edges[i++], sizeof(int) * colony->verteces);
 	i = ++n;
-	while (i--)
+	while (i-- && path_list)
 	{
 		path = path_list->path;
 		while (path->next)
 		{
-			++colony->edges[path->top->index][path->next->top->index];
-			++colony->edges[path->next->top->index][path->top->index];
+			colony->edges[path->top->index][path->next->top->index] = 1;
+			path->top->splitted = 0;
 			path = path->next;
 		}
 		path_list = path_list->next;
@@ -50,8 +87,11 @@ void		apply_paths(t_lemin *colony, t_paths *path_list)
 	{
 		j = -1;
 		while (++j < colony->verteces)
-			if (colony->edges[i][j] >= 2)
+			if (colony->edges[i][j] && colony->edges[j][i])
+			{
 				colony->edges[i][j] = 0;
+				colony->edges[j][i] = 0;
+			}
 		++i;
 	}
 }
@@ -79,39 +119,14 @@ void		add_path(t_paths **path_list, t_queue *path, int len)
 	}
 }
 
-int			approx_turns(int ants, t_paths *set)
+void		print_lens(t_paths *list)
 {
-	t_paths	*set0;
-	t_paths	*set1;
-	
-	if (!set->next)
-		return (set->len + ants - 1);
-	if (!set->len)
-		return (0);
-	set0 = set;
-	set1 = set->next;
-	while (ants > 0)
+	while (list)
 	{
-		while (set->len < set1->len)
-		{
-			while (set != set1)
-			{
-				++set->len;
-				--ants;
-				set = set->next;
-			}
-			set = set0;
-		}
-		if (set1->next)
-			set1 = set1->next;
-		else
-		{
-			++set1->len;
-			--ants;
-		}
-		set = set0;
+		ft_printf("{yellow}%d {eoc}", list->len);
+		list = list->next;
 	}
-	return (set0->len);
+	ft_printf("\n");
 }
 
 int			check_paths_set(t_lemin *colony, t_paths **set)
@@ -121,13 +136,16 @@ int			check_paths_set(t_lemin *colony, t_paths **set)
 
 	*set = NULL;
 	while ((path = bfs(colony, &len)))
+	{
 		add_path(set, path, len);
+		ft_printf("{green}%d {eoc}", len);
+	}
 	clean_after_search(colony->rooms, colony->verteces);
 	if (!*set)
 		return (INF_PATH);
 	while ((*set)->prev)
 		*set = (*set)->prev;
-	return (approx_turns(colony->ants_num, *set));
+	return (open_the_gates(colony, *set, 0));
 }
 
 void		clear_paths(t_paths *path_list)
@@ -154,6 +172,15 @@ void		clear_paths(t_paths *path_list)
 	free(path_list);
 }
 
+void		restore_lens(t_paths *set)
+{
+	while (set)
+	{
+		set->len = set->len0;
+		set = set->next;
+	}
+}
+
 t_paths		*evaluate_paths(t_lemin *colony, t_paths *path_list)
 {
 	t_paths	*p;
@@ -169,10 +196,11 @@ t_paths		*evaluate_paths(t_lemin *colony, t_paths *path_list)
 	while (p)
 	{
 		apply_paths(colony, path_list);
-		if ((curr_len = check_paths_set(colony, &curr)) > prev_len)
+		if ((curr_len = check_paths_set(colony, &curr)) >= prev_len + 100)
 		{
 			clear_paths(curr);
 			clear_paths(path_list);
+			restore_lens(prev);
 			return (prev);
 		}
 		clear_paths(prev);
@@ -181,6 +209,7 @@ t_paths		*evaluate_paths(t_lemin *colony, t_paths *path_list)
 		p = p->next;
 	}
 	clear_paths(path_list);
+	restore_lens(curr);
 	return (curr);
 }
 
@@ -191,10 +220,17 @@ t_paths		*find_paths(t_lemin *colony)
 	int		len;
 
 	path_list = NULL;
-	while ((path = dijkstra(colony, &len)))
+	while ((path = bfs(colony, &len)))
+	{
+//		ft_printf("{yellow}%d {eoc} ", len);
+//		print_path(path);
 		add_path(&path_list, path, len);
+	}
 	clean_after_search(colony->rooms, colony->verteces);
 	while (path_list->prev)
 		path_list = path_list->prev;
+	sort_list(path_list);
+	print_lens(path_list);
+	clean_after_search(colony->rooms, colony->verteces);
 	return (evaluate_paths(colony, path_list));
 }

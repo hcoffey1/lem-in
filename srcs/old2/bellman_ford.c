@@ -1,43 +1,68 @@
 
 #include "lemin.h"
-/*
-t_queue		*bellman_ford_algorithm(t_lemin *ant_farm)
+
+static t_queue	*get_path_bellman(t_lemin *colony, int *len)
 {
-    int            vertex;
-    int            parent;
-    int            child;
-	int				distance;
+	t_vertex	*track;
+	t_queue		*path;
+
+	*len = 0;
+	path = new_queue(colony->end);
+	track = colony->end->path;
+	while (track)
+	{
+		colony->edges[track->index][path->top->index] = 0;
+		colony->edges[path->top->index][track->index] = 0;
+		push_front(&path, track);
+		track = track->path;
+		++(*len);
+	}
+	clean_after_search(colony->rooms, colony->verteces);
+	if (path->top != colony->start)
+		return (NULL);
+	ft_printf("{cyan}%d{eoc} ", *len);
+	return (path);
+}
+
+t_queue		*bellman_ford(t_lemin *colony, int *len)
+{
+    int vertex;
+    int parent;
+    int child;
+	int distance;
 
     vertex = 0;
-    ant_farm->start->minpath = 0;
-    while (ant_farm->rooms[vertex])
+    colony->start->minpath = 0;
+	colony->start->closed = 1;
+    while (vertex < colony->verteces)
     {
         parent = 0;
-        while (parent < ant_farm->verteces)
+        while (parent < colony->verteces)
         {
             child = 0;
-            while (child < ant_farm->verteces)
+            while (child < colony->verteces)
             {
-                if (ant_farm->edges[parent][child] && !ant_farm->rooms[child]->visited)
-			{
-				if (!ant_farm->rooms[parent]->splitted || (ant_farm->rooms[parent]->splitted && ant_farm->rooms[parent]->path && ant_farm->rooms[parent]->path->splitted)
-					|| (ant_farm->rooms[parent]->splitted && ant_farm->rooms[parent]->path && !ant_farm->rooms[parent]->path->splitted && ant_farm->edges[parent][child] < 0))
+				if (colony->edges[parent][child] && !colony->rooms[child]->closed)
 				{
-					distance = ABS(ant_farm->edges[parent][child]) + ant_farm->rooms[parent]->minpath;
-					if (ant_farm->rooms[child]->minpath > distance)
+					if (!colony->rooms[parent]->splitted
+					|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
+						&& (colony->rooms[parent]->path->splitted
+							|| colony->edges[parent][child] < 0)))
 					{
-						ant_farm->rooms[child]->minpath = distance;
-					ant_farm->rooms[parent]->path = ant_farm->rooms[child];
+						distance = colony->edges[parent][child] + colony->rooms[parent]->minpath;
+						if (colony->rooms[child]->minpath > distance)
+						{
+							colony->rooms[child]->minpath = distance;
+							colony->rooms[child]->path = colony->rooms[parent];
+						}
+						colony->rooms[child]->closed = 1;
 					}
-//						push(&q, ant_farm->rooms[child]);
-//						q->top->visited = 1;
 				}
-			}
-			++child;
+				++child;
             }
             ++parent;
         }
         ++vertex;
     }
-	return (get_path(ant_farm));
-}*/
+	return (get_path_bellman(colony, len));
+}

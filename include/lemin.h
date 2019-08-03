@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/01 23:15:24 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/03 18:27:10 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void			clean_after_search(t_vertex **rooms, int verteces);
 t_paths			*find_paths(t_lemin *colony);
 t_queue			*dijkstra(t_lemin *colony, int *len);
 t_queue			*bfs(t_lemin *colony, int *len);
-void			open_the_gates(t_lemin *colony, t_paths *path_list);
+t_queue			*bellman_ford(t_lemin *colony, int *len);
+
+int				open_the_gates(t_lemin *colony, t_paths *path_list, int flag);
 
 #endif

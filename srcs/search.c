@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/01 22:08:37 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/03 23:56:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,18 @@ static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 	track = colony->end->path;
 	while (track)
 	{
+		colony->edges[path->top->index][track->index] = -1;
+		track->splitted = 1;
 		colony->edges[track->index][path->top->index] = 0;
-		colony->edges[path->top->index][track->index] = 0;
 		push_front(&path, track);
 		track = track->path;
 		++(*len);
 	}
+	colony->start->splitted = 0;
 	clean_after_search(colony->rooms, colony->verteces);
 	return (path);
 }
+
 
 t_queue			*bfs(t_lemin *colony, int *len)
 {
@@ -39,20 +42,22 @@ t_queue			*bfs(t_lemin *colony, int *len)
 	int		child;
 
 	q = new_queue(colony->start);
+	colony->start->closed = 1;
 	while (q->top != colony->end)
 	{
-		if (!q->top->closed)
-		{
-			q->top->closed = 1;
 			parent = q->top->index;
 			child = -1;
 			while (++child < colony->verteces)
-				if (colony->edges[parent][child] && !colony->rooms[child]->closed)
+				if (colony->edges[parent][child] && !colony->rooms[child]->closed
+				&& (!colony->rooms[parent]->splitted
+				|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
+				&& (colony->rooms[parent]->path->splitted
+					|| colony->edges[parent][child] < 0))))
 				{
 					colony->rooms[child]->path = colony->rooms[parent];
 					push(&q, colony->rooms[child]);
+					colony->rooms[child]->closed = 1;
 				}
-		}
 		pop(&q);
 		if (!q)
 			return (NULL);
