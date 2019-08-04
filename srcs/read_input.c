@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/04 23:05:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 23:54:43 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/05 00:19:41 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static char	*output_line(char *tail, char *p)
 	*p = 0;
 	if (*tail)
 		++tail;
-	p = tail0;
 	while (*tail)
 		*tail0++ = *tail++;
 	*tail0 = 0;
@@ -48,11 +47,6 @@ static char	*gnl(void)
 	}
 	if ((r = read(0, buf, BUFF_SIZE)) < 0)
 		error(errno);
-	if (!r && !*tail)
-	{
-		free(tail);
-		return (NULL);
-	}
 	if (r)
 	{
 		buf[r] = 0;
@@ -66,7 +60,10 @@ static char	*gnl(void)
 		++p;
 	if (*p)
 		return (output_line(tail, p));
-	return (gnl());
+	if (r)
+		return (gnl());
+	free(tail);
+	return (NULL);
 }
 
 t_mfile		*read_input(t_mfile *prev)
@@ -81,7 +78,6 @@ t_mfile		*read_input(t_mfile *prev)
 	new->prev = prev;
 	new->line = line;
 	new->type = -1;
-	ft_printf("%s\n", new->line);
 	new->next = read_input(new);
 	return (new);
 }

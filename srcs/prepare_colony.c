@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 23:49:23 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/05 00:28:53 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,15 @@ static void	find_ends(t_lemin *colony, t_mfile *map)
 	index = 0;
 	while (map)
 	{
-		if (map->type == 2)
-			++index;
-		else if (map->type == 3)
-			colony->start = colony->rooms[index + 1];
-		else if (map->type == 4)
-			colony->end = colony->rooms[index + 1];
+		if (map->type > 1)
+		{
+			if (map->type == 3)
+				colony->start = colony->rooms[index];
+			else if (map->type == 4)
+				colony->end = colony->rooms[index];
+			else
+				++index;
+		}
 		map = map->next;
 	}
 	if (!colony->start || !colony->end)
@@ -126,8 +129,8 @@ t_lemin		*prepare_colony(t_mfile *map)
 		error(errno);
 	validate(map, &colony->ants_num, &colony->verteces);
 	colony->edges = edges_matrix(colony->verteces);
-	find_ends(colony, map);
 	colony->rooms = build_anthill(colony, map->next);
+	find_ends(colony, map);
 	colony->ants = populate(colony->start, colony->ants_num);
 	return (colony);
 }
