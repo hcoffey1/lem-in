@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/03 23:56:37 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 16:51:59 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 	track = colony->end->path;
 	while (track)
 	{
-		colony->edges[path->top->index][track->index] = -1;
+		colony->edges[path->top->index][track->index] *= -1;
 		track->splitted = 1;
 		colony->edges[track->index][path->top->index] = 0;
 		push_front(&path, track);

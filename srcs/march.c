@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/03 23:59:22 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 16:56:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void		distribute_paths(t_ants *ants, t_paths *path_list)
 	{
 		ants->path = shortest_path(path_list);
 		ants->room = ants->path->top;
-//		ft_printf("%d ", ants->path->next->top->index);
 		ants = ants->next;
 	}
 }
@@ -85,6 +84,6 @@ int				open_the_gates(t_lemin *colony, t_paths *path_list, int flag)
 		if (flag)
 			ft_printf("\n");
 	}
-	ft_printf("{cyan}%d{eoc}\n", num);
+//	ft_printf("{cyan}%d{eoc}\n", num);
 	return (num);
 }

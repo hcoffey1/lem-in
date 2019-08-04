@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/03 21:54:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 23:50:38 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,63 +14,76 @@
 
 void		error(int error_type)
 {
-	(void)error_type;
-	ft_printf("ERROR\n");
-	exit(-1);
+	if (error_type == ERR_LINE)
+		ft_putstr("ERROR: a line is not room nor connection\n");
+	else if (error_type == ERR_ROOM)
+		ft_putstr("ERROR: wrong room\n");
+	else if (error_type == ERR_PIPE)
+		ft_putstr("ERROR: wrong connection\n");
+	else if (error_type == ERR_ANTS)
+		ft_putstr("ERROR: wrong number of ants\n");
+	else if (error_type == ERR_STEN)
+		ft_putstr("ERROR: wrong number of ##start and/or ##end\n");
+	else if (error_type == ERR_ARGS)
+		ft_putstr("ERROR: wrong arguments (use -h)\n");
+	else
+		perror("ERROR");
+	exit(error_type);
 }
 
-/*void	cleanup(t_vertex **list_nodes, t_path_list *path_list)
+static void	usage(void)
 {
-	t_queue			*path;
-	void			*ptr;
+	ft_putstr("usage: lem-in [-flags] < map_file\n");
+	ft_putstr("\t(lem-in will wait for input from stdin, use '<' to redirect from file)\n");
+	ft_putstr("flags:\n");
+	ft_putstr("\t-h - show usage\n");
+	ft_putstr("\t-v - visual mode\n");
+	ft_putstr("\t-d - debug mode\n");
+	ft_putstr("\t-s - slow mode (slightly better results with much more time)\n");
+	ft_putstr("\t-n - no path nor map output, just the number of turns taken\n");
+	exit(0);
+}
 
-	ptr = (t_vertex **)list_nodes;
-	while (*list_nodes)
-	{
-		free((*list_nodes)->name);
-		free((*list_nodes)->links);
-		free(*list_nodes++);
-	}
-	free(ptr);
-	while (path_list)
-	{
-		ptr = (t_path_list *)path_list;
-		path = path_list->path;
-		while (path->right)
-		{
-			path = path->right;
-			free(path->left);
-		}
-		free(path);
-		path_list = path_list->right;
-		free(ptr);
-	}
-}*/
-
-static void	print_file(int fd)
+static int	get_flags(char *arg)
 {
-	char	*line;
-	int		r;
+	int flags;
 
-	while ((r = get_next_line(fd, &line)))
+	flags = 0;
+	++arg;
+	while (*arg)
 	{
-		if (r < 0)
-			error(-1);
-		ft_printf("%s\n", line);
-		free(line);
+		if (*arg == 'h')
+			usage();
+		else if (*arg == 'v')
+			flags |= 1;
+		else if (*arg == 'd')
+			flags |= 2;
+		else if (*arg == 's')
+			flags |= 4;
+		else if (*arg == 'n')
+			flags |= 8;
+		else
+			error(ERR_ARGS);
+		++arg;
 	}
- 	close(fd);
+	return (flags);
 }
 
 int			main(int argc, char **argv)
 {
-	t_lemin *colony;
+	t_lemin	*colony;
+	t_mfile	*map;
+	int		fd;
+	int		flags;
 
-	if (argc != 2)
-		return (0);
-	colony = create_ant_colony(*(argv + 1));
-//	print_file(open(*(argv + 1), O_RDONLY));
-	open_the_gates(colony, find_paths(colony), 0);
-//	cleanup(list_nodes, path_list);
+	if (argc == 2 && **(++argv) == '-')
+		flags = get_flags(*argv);
+	else if (argc != 1)
+		error(ERR_ARGS);
+	if (!(map = read_input(NULL)))
+		error(ERR_LINE);
+	colony = prepare_colony(map);
+	colony->flags = flags;
+	open_the_gates(colony, find_paths(colony), 1);
 	return (0);
 }

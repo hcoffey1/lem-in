@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 21:17:41 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 00:08:07 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 18:27:25 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		clean_after_search(t_vertex **rooms, int verteces)
 		}
 }
 
-void		apply_paths(t_lemin *colony, t_paths *path_list)
+void			apply_paths(t_lemin *colony, t_paths *path_list)
 {
 	static int	n = 0;
 	t_queue		*path;
@@ -76,7 +76,7 @@ void		apply_paths(t_lemin *colony, t_paths *path_list)
 		path = path_list->path;
 		while (path->next)
 		{
-			colony->edges[path->top->index][path->next->top->index] = 1;
+			++colony->edges[path->top->index][path->next->top->index];
 			path->top->splitted = 0;
 			path = path->next;
 		}
@@ -100,7 +100,8 @@ void		add_path(t_paths **path_list, t_queue *path, int len)
 {
 	t_paths	*new;
 
-	new = (t_paths *)malloc(sizeof(t_paths));
+	if (!(new = (t_paths *)malloc(sizeof(t_paths))))
+		error(errno);
 	new->path = path;
 	new->len = len;
 	new->len0 = len;
@@ -131,18 +132,13 @@ void		print_lens(t_paths *list)
 
 int			check_paths_set(t_lemin *colony, t_paths **set)
 {
-	t_queue	*path;
-	int		len;
+	t_queue		*path;
+	int			len;
 
 	*set = NULL;
 	while ((path = bfs(colony, &len)))
-	{
 		add_path(set, path, len);
-		ft_printf("{green}%d {eoc}", len);
-	}
 	clean_after_search(colony->rooms, colony->verteces);
-	if (!*set)
-		return (INF_PATH);
 	while ((*set)->prev)
 		*set = (*set)->prev;
 	return (open_the_gates(colony, *set, 0));
@@ -196,7 +192,7 @@ t_paths		*evaluate_paths(t_lemin *colony, t_paths *path_list)
 	while (p)
 	{
 		apply_paths(colony, path_list);
-		if ((curr_len = check_paths_set(colony, &curr)) >= prev_len + 100)
+		if ((curr_len = check_paths_set(colony, &curr)) > prev_len + 100)
 		{
 			clear_paths(curr);
 			clear_paths(path_list);
@@ -221,16 +217,11 @@ t_paths		*find_paths(t_lemin *colony)
 
 	path_list = NULL;
 	while ((path = bfs(colony, &len)))
-	{
-//		ft_printf("{yellow}%d {eoc} ", len);
-//		print_path(path);
 		add_path(&path_list, path, len);
-	}
 	clean_after_search(colony->rooms, colony->verteces);
 	while (path_list->prev)
 		path_list = path_list->prev;
 	sort_list(path_list);
-	print_lens(path_list);
 	clean_after_search(colony->rooms, colony->verteces);
 	return (evaluate_paths(colony, path_list));
 }

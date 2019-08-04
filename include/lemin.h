@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/03 18:27:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/04 23:52:24 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,29 @@
 # define LEMIN_H
 
 # include <stdlib.h>
-# include <math.h>
+# include <stdio.h>
+# include <errno.h>
 # include "libft.h"
-# include "get_next_line.h"
 
 # define INF_PATH		0xABCDEF
+# define BUFF_SIZE		12
 # define ABS(x) (x > 0 ? x : -x)
+
+
+# define ERR_LINE -1
+# define ERR_ROOM -2
+# define ERR_PIPE -3
+# define ERR_STEN -4
+# define ERR_ANTS -5
+# define ERR_ARGS -6
+
+typedef struct	s_mfile
+{
+	char			*line;
+	int				type;
+	struct s_mfile	*next;
+	struct s_mfile	*prev;
+}				t_mfile;
 
 typedef struct	s_vertex
 {
@@ -61,6 +78,7 @@ typedef struct	s_lemin
 {
 	int				ants_num;
 	int				verteces;
+	int				flags;
 	int				**edges;
 	t_vertex		**rooms;
 	t_vertex		*start;
@@ -68,8 +86,9 @@ typedef struct	s_lemin
 	t_ants			*ants;
 }				t_lemin;
 
-t_lemin			*create_ant_colony(char *filename);
-t_vertex		**process_file(t_lemin *colony, int fd);
+t_lemin			*prepare_colony(t_mfile *map);
+t_mfile			*read_input(t_mfile *prev);
+t_vertex		**build_anthill(t_lemin *colony, t_mfile *map);
 int				check_line(char *line);
 void			error(int error_type);
 int				ft_printf(const char *s, ...);
@@ -88,3 +107,4 @@ t_queue			*bellman_ford(t_lemin *colony, int *len);
 int				open_the_gates(t_lemin *colony, t_paths *path_list, int flag);
 
 #endif
+
