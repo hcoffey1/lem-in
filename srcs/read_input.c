@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/04 23:05:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 00:19:41 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/05 23:49:35 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*output_line(char *tail, char *p)
 	char *line;
 	char *tail0;
 
-	if (!(line = (char *)malloc(sizeof(char) * (p - tail))))
+	if (!(line = (char *)malloc(sizeof(char) * (p - tail + 1))))
 		error(errno);
 	p = line;
 	tail0 = tail;
@@ -32,12 +32,66 @@ static char	*output_line(char *tail, char *p)
 	return (line);
 }
 
-static char	*gnl(void)
+static char	*gnl(char **tail)
 {
-	static char	*tail = NULL;
 	char		buf[BUFF_SIZE + 1];
 	char		*p;
 	int			r;
+
+	if ((r = read(0, buf, BUFF_SIZE)) < 0)
+		error(errno);
+	if (r)
+	{
+		buf[r] = 0;
+		p = *tail;
+		if (!(*tail = ft_strjoin(*tail, buf)))
+			error(errno);
+		free(p);
+	}
+	p = *tail;
+	while (*p && *p != '\n')
+		++p;
+	if (*p)
+		return (output_line(*tail, p));
+	if (r)
+		return (gnl(tail));
+	return (NULL);
+}
+
+static int	identify_line(char *line)
+{
+	int space;
+	int link;
+
+	space = 0;
+	link = 0;
+	if (*line == '#')
+	{
+		if (ft_strequ(line, "##start"))
+			return (START);
+		if (ft_strequ(line, "##end"))
+			return (END);
+		return (COMMENT);
+	}
+	while (*line)
+	{
+		if (*line == ' ')
+			++space;
+		if (*line == '-')
+			++link;
+		++line;
+	}
+	if (!link && space == 2)
+		return (ROOM);
+	if (!space && link == 1)
+		return (LINK);
+	return (OTHER);
+}
+
+t_mfile		*read_input(t_mfile *prev)
+{
+	static char	*tail = NULL;
+	t_mfile		*new;
 
 	if (!tail)
 	{
@@ -45,39 +99,16 @@ static char	*gnl(void)
 			error(errno);
 		*tail = 0;
 	}
-	if ((r = read(0, buf, BUFF_SIZE)) < 0)
-		error(errno);
-	if (r)
-	{
-		buf[r] = 0;
-		p = tail;
-		if (!(tail = ft_strjoin(tail, buf)))
-			error(errno);
-		free(p);
-	}
-	p = tail;
-	while (*p && *p != '\n')
-		++p;
-	if (*p)
-		return (output_line(tail, p));
-	if (r)
-		return (gnl());
-	free(tail);
-	return (NULL);
-}
-
-t_mfile		*read_input(t_mfile *prev)
-{
-	t_mfile	*new;
-	char	*line;
-
-	if (!(line = gnl()))
-		return (NULL);
 	if (!(new = (t_mfile *)malloc(sizeof(t_mfile))))
 		error(errno);
+	if (!(new->line = gnl(&tail)))
+	{
+		free(tail);
+		free(new);
+		return (NULL);
+	}
+	new->type = identify_line(new->line);
 	new->prev = prev;
-	new->line = line;
-	new->type = -1;
 	new->next = read_input(new);
 	return (new);
 }

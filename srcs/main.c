@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 00:19:50 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/05 23:53:40 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,22 @@
 
 void		error(int error_type)
 {
-	if (error_type == ERR_LINE)
-		ft_putstr("ERROR: a line is not room nor connection\n");
-	else if (error_type == ERR_ROOM)
-		ft_putstr("ERROR: wrong room\n");
-	else if (error_type == ERR_PIPE)
-		ft_putstr("ERROR: wrong connection\n");
-	else if (error_type == ERR_ANTS)
-		ft_putstr("ERROR: wrong number of ants\n");
-	else if (error_type == ERR_STEN)
-		ft_putstr("ERROR: wrong number of ##start and/or ##end\n");
-	else if (error_type == ERR_ARGS)
+	if (error_type == ERR_ARGS)
 		ft_putstr("ERROR: wrong arguments (use -h)\n");
+	else if (error_type == ERR_LINE)
+		ft_putstr("ERROR: invalid line\n");
+	else if (error_type == ERR_ROOM)
+		ft_putstr("ERROR: invalid room\n");
+	else if (error_type == ERR_LINK)
+		ft_putstr("ERROR: invalid links\n");
+	else if (error_type == ERR_ANTS)
+		ft_putstr("ERROR: invalid ants\n");
+	else if (error_type == ERR_STEN)
+		ft_putstr("ERROR: invalid ##start and/or ##end\n");
+	else if (error_type == ERR_DUPE)
+		ft_putstr("ERROR: duplicate room name and/or coordinates\n");
+	else if (error_type == ERR_PATH)
+		ft_putstr("ERROR: no paths found\n");
 	else
 		perror("ERROR");
 	exit(error_type);
@@ -69,10 +73,27 @@ static int	get_flags(char *arg)
 	return (flags);
 }
 
+static void	print_file(t_mfile *map)
+{
+	while (map->next)
+	{
+		ft_putstr(map->line);
+		ft_putchar('\n');
+		free(map->line);
+		map = map->next;
+		free(map->prev);
+	}
+	ft_putstr(map->line);
+	ft_putstr("\n\n");
+	free(map->line);
+	free(map);
+}
+
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
 	t_mfile	*map;
+	t_paths	*solution;
 	int		fd;
 	int		flags;
 
@@ -84,6 +105,8 @@ int			main(int argc, char **argv)
 		error(ERR_LINE);
 	colony = prepare_colony(map);
 	colony->flags = flags;
-	open_the_gates(colony, find_paths(colony), 1);
+	solution = find_paths(colony);
+	print_file(map);
+	open_the_gates(colony, solution, 1);
 	return (0);
 }

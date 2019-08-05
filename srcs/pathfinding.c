@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 21:17:41 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 18:27:25 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/05 22:57:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ t_paths		*evaluate_paths(t_lemin *colony, t_paths *path_list)
 	while (p)
 	{
 		apply_paths(colony, path_list);
-		if ((curr_len = check_paths_set(colony, &curr)) > prev_len + 100)
+		if ((curr_len = check_paths_set(colony, &curr)) > prev_len + 1)
 		{
 			clear_paths(curr);
 			clear_paths(path_list);
@@ -218,6 +218,8 @@ t_paths		*find_paths(t_lemin *colony)
 	path_list = NULL;
 	while ((path = bfs(colony, &len)))
 		add_path(&path_list, path, len);
+	if (!path_list)
+		error(ERR_PATH);
 	clean_after_search(colony->rooms, colony->verteces);
 	while (path_list->prev)
 		path_list = path_list->prev;
