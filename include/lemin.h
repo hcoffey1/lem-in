@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 22:48:03 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 00:07:15 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@
 # define ERR_PATH -6
 
 # define F_FULL 1
-# define F_VISUAL 2
+# define F_SLOW 2
 # define F_DEBUG 4
-# define F_SLOW 8
+# define F_VISUAL 8
 # define F_TURNS 16
 
 # define OTHER 0

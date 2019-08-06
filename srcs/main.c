@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 22:47:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 00:04:18 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	usage(void)
 	ft_putstr("\t-h - usage\n");
 	ft_putstr("\t-v - visual mode\n");
 	ft_putstr("\t-d - debug mode (show paths found)\n");
-	ft_putstr("\t-s - slow mode (a bit better result with much more time)\n");
+	ft_putstr("\t-p - precise mode (a bit better results but slower)\n");
 	ft_putstr("\t-n - output only the number of turns taken\n");
 	exit(0);
 }
@@ -59,7 +59,7 @@ static int	get_flags(char *arg)
 			flags |= F_VISUAL;
 		else if (*arg == 'd')
 			flags |= F_DEBUG + F_TURNS;
-		else if (*arg == 's')
+		else if (*arg == 'p')
 			flags |= F_SLOW;
 		else if (*arg == 'n')
 		{
