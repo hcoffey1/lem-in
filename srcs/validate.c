@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/05 17:21:27 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 23:45:52 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 18:20:07 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ static int	check_rooms(t_mfile **map)
 			++rooms;
 		else if ((*map)->type == START || (*map)->type == END)
 		{
-			*map = (*map)->next;
-			if (!*map || (*map)->type != ROOM)
-				error(ERR_STEN);
+			if (!(*map = (*map)->next) || (*map)->type != ROOM)
+				error(ERR_ENDS);
 			(*map)->type = (*map)->prev->type;
 			(*map)->prev->type = COMMENT;
 			ends_num += (*map)->type;
@@ -53,7 +52,7 @@ static int	check_rooms(t_mfile **map)
 		*map = (*map)->next;
 	}
 	if (rooms < 2 || ends_num != START + END)
-		error(ERR_STEN);
+		error(ERR_ENDS);
 	return (rooms);
 }
 
@@ -76,13 +75,13 @@ static void	check_links(t_mfile **map)
 				free((*map)->prev);
 			}
 			free((*map)->line);
-			free(map);
+			free(*map);
 			return ;
 		}
 		*map = (*map)->next;
 	}
 	if (!links)
-		error(ERR_LINK);
+		error(ERR_PATH);
 }
 
 void		validate(t_mfile *map, int *ants, int *verteces)

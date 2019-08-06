@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 17:06:53 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 18:28:30 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 18:21:16 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-t_queue *new_queue(t_vertex *start)
+t_queue	*new_queue(t_vertex *start)
 {
 	t_queue *new;
 

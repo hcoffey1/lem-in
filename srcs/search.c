@@ -6,11 +6,21 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 16:51:59 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 22:47:42 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
+
+static void		clean_after_search(t_vertex **rooms, int verteces)
+{
+	while (verteces--)
+		if (rooms[verteces])
+		{
+			rooms[verteces]->closed = 0;
+			rooms[verteces]->path = NULL;
+		}
+}
 
 static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 {
@@ -34,6 +44,18 @@ static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 	return (path);
 }
 
+static void		relax(t_lemin *colony, t_queue *q, int parent, int child)
+{
+	if (!colony->rooms[parent]->splitted
+	|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
+	&& (colony->rooms[parent]->path->splitted
+	|| colony->edges[parent][child] < 0)))
+	{
+		colony->rooms[child]->path = colony->rooms[parent];
+		push(&q, colony->rooms[child]);
+		colony->rooms[child]->closed = 1;
+	}
+}
 
 t_queue			*bfs(t_lemin *colony, int *len)
 {
@@ -45,93 +67,36 @@ t_queue			*bfs(t_lemin *colony, int *len)
 	colony->start->closed = 1;
 	while (q->top != colony->end)
 	{
-			parent = q->top->index;
-			child = -1;
-			while (++child < colony->verteces)
-				if (colony->edges[parent][child] && !colony->rooms[child]->closed
-				&& (!colony->rooms[parent]->splitted
-				|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
-				&& (colony->rooms[parent]->path->splitted
-					|| colony->edges[parent][child] < 0))))
-				{
-					colony->rooms[child]->path = colony->rooms[parent];
-					push(&q, colony->rooms[child]);
-					colony->rooms[child]->closed = 1;
-				}
+		parent = q->top->index;
+		child = -1;
+		while (++child < colony->verteces)
+			if (colony->edges[parent][child] && !colony->rooms[child]->closed)
+				relax(colony, q, parent, child);
 		pop(&q);
 		if (!q)
+		{
+			clean_after_search(colony->rooms, colony->verteces);
 			return (NULL);
+		}
 	}
 	while (q)
 		pop(&q);
 	return (get_path_bfs(colony, len));
 }
 
-static t_queue	*get_path_dijkstra(t_lemin *colony, int *len)
+t_paths			*explore_anthill(t_lemin *colony)
 {
-	t_vertex	*track;
-	t_queue		*path;
+	t_queue	*path;
+	t_paths	*path_list;
+	int		len;
 
-	path = new_queue(colony->end);
-	track = colony->end->path;
-	*len = 0;
-	while (track)
-	{
-		track->splitted = 1;
-		colony->edges[track->index][path->top->index] = 0;
-		colony->edges[path->top->index][track->index] *= -1;
-		push_front(&path, track);
-		track = track->path;
-		++(*len);
-	}
-	colony->start->splitted = 0;
-	clean_after_search(colony->rooms, colony->verteces);
-	return (path);
-}
-
-static void		relax_and_push(t_lemin *colony, t_queue *q, int parent, int child)
-{
-	int weight;
-
-	if (!colony->rooms[parent]->splitted
-		|| (colony->rooms[parent]->splitted && colony->rooms[parent]->path
-			&& (colony->rooms[parent]->path->splitted
-				|| colony->edges[parent][child] < 0)))
-	{
-		weight = colony->edges[parent][child] + colony->rooms[parent]->minpath;
-		if (weight < colony->rooms[child]->minpath)
-		{
-			colony->rooms[child]->minpath = weight;
-			colony->rooms[child]->path = colony->rooms[parent];
-		}
-		push(&q, colony->rooms[child]);
-	}
-}
-
-t_queue			*dijkstra(t_lemin *colony, int *len)
-{
-	t_queue	*q;
-	int		parent;
-	int		child;
-
-	q = new_queue(colony->start);
-	colony->start->minpath = 0;
-	while (q->top != colony->end)
-	{
-		if (!q->top->closed)
-		{
-			q->top->closed = 1;
-			parent = q->top->index;
-			child = -1;
-			while (++child < colony->verteces)
-				if (colony->edges[parent][child] && !colony->rooms[child]->closed)
-					relax_and_push(colony, q, parent, child);
-		}
-		pop(&q);
-		if (!q)
-			return (NULL);
-	}
-	while (q)
-		pop(&q);
-	return (get_path_dijkstra(colony, len));
+	path_list = NULL;
+	while ((path = bfs(colony, &len)))
+		add_path(&path_list, path, len);
+	if (!path_list)
+		error(ERR_PATH);
+	while (path_list->prev)
+		path_list = path_list->prev;
+	sort_paths(path_list);
+	return (find_best_paths(colony, path_list));
 }

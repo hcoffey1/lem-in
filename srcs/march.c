@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/04 16:56:58 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 20:51:39 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,12 @@
 
 static t_queue	*shortest_path(t_paths *path_list)
 {
-	t_paths	*shortest;
-	int		len;
-
-	len = INF_PATH;
-	while (path_list)
-	{
-		if (path_list->len < len)
-		{
-			len = path_list->len;
-			shortest = path_list;
-		}
+	while (path_list && path_list->next
+			&& path_list->len >= path_list->next->len)
 		path_list = path_list->next;
-	}
-	if (shortest->len)
-		++shortest->len;
-	return (shortest->path);
+	if (path_list->len)
+		++path_list->len;
+	return (path_list->path);
 }
 
 static void		distribute_paths(t_ants *ants, t_paths *path_list)
@@ -38,6 +28,29 @@ static void		distribute_paths(t_ants *ants, t_paths *path_list)
 	{
 		ants->path = shortest_path(path_list);
 		ants->room = ants->path->top;
+		ants = ants->next;
+	}
+}
+
+static void		move_ants(t_ants *ants, t_vertex *end, int flags)
+{
+	int space;
+
+	space = -1;
+	while (ants)
+	{
+		if (ants->room != end && !ants->path->next->top->closed)
+		{
+			if ((flags & F_FULL) && ++space)
+				ft_putchar(' ');
+			ants->room->closed = 0;
+			ants->path = ants->path->next;
+			ants->room = ants->path->top;
+			if (ants->room != end)
+				ants->room->closed = 1;
+			if (flags & F_FULL)
+				ft_printf("L%d-%s", ants->num, ants->room->name);
+		}
 		ants = ants->next;
 	}
 }
@@ -53,37 +66,22 @@ static int		all_gone(t_ants *ants, t_vertex *end)
 	return (1);
 }
 
-int				open_the_gates(t_lemin *colony, t_paths *path_list, int flag)
+int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags)
 {
-	t_ants	*ants;
-	int		num;
+	int num;
 
 	distribute_paths(colony->ants, path_list);
 	num = 0;
-	while (!all_gone(colony->ants, colony->end)) // пока все не находятся в последней комнате
+	while (!all_gone(colony->ants, colony->end))
 	{
 		++num;
-//		ft_printf("{magenta}turn %3d:\n{eoc}", num); // remove
-		ants = colony->ants;
-		while (ants) // для каждого муравья
-		{
-			if (ants->room != colony->end && !ants->path->next->top->closed) // если текущая комната муравья не последняя и следующая не занята
-			{
-				if (flag)
-					ft_printf("L%d-", ants->num);
-				ants->room->closed = 0; // открываем текующую комнату
-				ants->path = ants->path->next; // переходим к следующей
-				ants->room = ants->path->top;
-				if (ants->room != colony->end) // и закрываем её
-					ants->room->closed = 1;
-				if (flag)
-					ft_printf("%s ", ants->room->name);
-			}
-			ants = ants->next;
-		}
-		if (flag)
-			ft_printf("\n");
+		if (flags & F_DEBUG)
+			ft_printf("{magenta}Turn %d:\n{eoc}", num);
+		move_ants(colony->ants, colony->end, flags);
+		if (flags & F_FULL)
+			ft_putchar('\n');
 	}
-//	ft_printf("{cyan}%d{eoc}\n", num);
+	if (flags & F_TURNS)
+		ft_printf("Total turns: {green}%d{eoc}\n", num);
 	return (num);
 }

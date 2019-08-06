@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/04 23:05:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 23:49:35 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 18:15:49 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,6 @@ static char	*gnl(char **tail)
 
 static int	identify_line(char *line)
 {
-	int space;
-	int link;
-
-	space = 0;
-	link = 0;
 	if (*line == '#')
 	{
 		if (ft_strequ(line, "##start"))
@@ -76,15 +71,11 @@ static int	identify_line(char *line)
 	while (*line)
 	{
 		if (*line == ' ')
-			++space;
+			return (ROOM);
 		if (*line == '-')
-			++link;
+			return (LINK);
 		++line;
 	}
-	if (!link && space == 2)
-		return (ROOM);
-	if (!space && link == 1)
-		return (LINK);
 	return (OTHER);
 }
 

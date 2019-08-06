@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 23:49:06 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 22:48:03 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,20 @@
 # include <errno.h>
 # include "libft.h"
 
-# define INF_PATH		0xABCDEF
 # define BUFF_SIZE		12
-# define ABS(x) (x > 0 ? x : -x)
 
 # define ERR_ARGS -1
 # define ERR_ANTS -2
-# define ERR_LINE -3
-# define ERR_ROOM -4
-# define ERR_LINK -5
-# define ERR_STEN -6
-# define ERR_DUPE -7
-# define ERR_PATH -8
+# define ERR_ROOM -3
+# define ERR_ENDS -4
+# define ERR_DUPE -5
+# define ERR_PATH -6
+
+# define F_FULL 1
+# define F_VISUAL 2
+# define F_DEBUG 4
+# define F_SLOW 8
+# define F_TURNS 16
 
 # define OTHER 0
 # define COMMENT 1
@@ -50,7 +52,6 @@ typedef struct	s_vertex
 {
 	char			*name;
 	int				index;
-	int				minpath;
 	int				x;
 	int				y;
 	int				splitted;
@@ -100,19 +101,20 @@ void			validate(t_mfile *map, int *ants, int *verteces);
 t_vertex		**build_anthill(t_mfile *map, int **edges, int verteces);
 void			error(int error_type);
 int				ft_printf(const char *s, ...);
+t_paths			*explore_anthill(t_lemin *colony);
+t_queue			*bfs(t_lemin *colony, int *len);
+t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list);
+int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags);
 
 t_queue			*new_queue(t_vertex *start);
 void			push(t_queue **q, t_vertex *val);
 void			push_front(t_queue **q, t_vertex *val);
 void			pop(t_queue **q);
 
-void			clean_after_search(t_vertex **rooms, int verteces);
-t_paths			*find_paths(t_lemin *colony);
-t_queue			*dijkstra(t_lemin *colony, int *len);
-t_queue			*bfs(t_lemin *colony, int *len);
-t_queue			*bellman_ford(t_lemin *colony, int *len);
-
-int				open_the_gates(t_lemin *colony, t_paths *path_list, int flag);
+void			add_path(t_paths **path_list, t_queue *path, int len);
+void			print_paths(t_paths *path_list);
+void			sort_paths(t_paths *list);
+void			clear_paths(t_paths *path_list);
 
 #endif
 

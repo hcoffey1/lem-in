@@ -6,30 +6,11 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/05 23:46:39 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/06 18:24:11 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
-
-static int		**edges_matrix(int verteces)
-{
-	int **matrix;
-	int i;
-
-	if (!(matrix = (int **)malloc(sizeof(int *) * (verteces + 1))))
-		error(errno);
-	i = 0;
-	while (i < verteces)
-	{
-		if (!(matrix[i] = (int *)malloc(sizeof(int) * verteces)))
-			error(errno);
-		ft_bzero(matrix[i], sizeof(int) * verteces);
-		++i;
-	}
-	matrix[i] = NULL;
-	return (matrix);
-}
 
 static t_ants	*populate(t_vertex *start, int num)
 {
@@ -52,7 +33,7 @@ static void		find_ends(t_lemin *colony, t_mfile *map)
 	int index;
 
 	index = 0;
-	while (map->type != LINK)
+	while (map && map->type != LINK)
 	{
 		if (map->type == START)
 			colony->start = colony->rooms[index];
@@ -77,6 +58,25 @@ static void		check_duplicates(t_vertex **rooms)
 				error(ERR_DUPE);
 		++rooms;
 	}
+}
+
+static int		**edges_matrix(int verteces)
+{
+	int **matrix;
+	int i;
+
+	if (!(matrix = (int **)malloc(sizeof(int *) * (verteces + 1))))
+		error(errno);
+	i = 0;
+	while (i < verteces)
+	{
+		if (!(matrix[i] = (int *)malloc(sizeof(int) * verteces)))
+			error(errno);
+		ft_bzero(matrix[i], sizeof(int) * verteces);
+		++i;
+	}
+	matrix[i] = NULL;
+	return (matrix);
 }
 
 t_lemin			*prepare_colony(t_mfile *map)
