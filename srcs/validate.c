@@ -6,13 +6,13 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/05 17:21:27 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 16:56:29 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 22:52:03 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
 
-static int	check_ants(t_mfile **map)
+static int	check_ants(t_input **map)
 {
 	char	*ants_line;
 	int		ants;
@@ -30,7 +30,7 @@ static int	check_ants(t_mfile **map)
 	return (ants);
 }
 
-static int	check_rooms(t_mfile **map)
+static int	check_rooms(t_input **map)
 {
 	int rooms;
 	int ends_num;
@@ -59,7 +59,7 @@ static int	check_rooms(t_mfile **map)
 	return (rooms);
 }
 
-static void	check_links(t_mfile **map)
+static void	check_links(t_input **map)
 {
 	int links;
 
@@ -87,7 +87,7 @@ static void	check_links(t_mfile **map)
 		error(ERR_PATH);
 }
 
-void		validate(t_mfile *map, int *ants, int *verteces)
+void		validate(t_input *map, int *ants, int *verteces)
 {
 	*ants = check_ants(&map);
 	*verteces = check_rooms(&map);

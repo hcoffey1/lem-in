@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   march.c                                            :+:      :+:    :+:   */
+/*   open_the_gates.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/23 22:34:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 16:08:43 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 22:45:18 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags)
 	while (!all_gone(colony->ants, colony->end))
 	{
 		++num;
-		if (flags & F_DEBUG)
+		if ((flags & F_DEBUG) && (flags & F_FULL))
 			ft_printf("{magenta}Turn %d:\n{eoc}", num);
 		move_ants(colony->ants, colony->end, flags);
 	}

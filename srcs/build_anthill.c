@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:22:27 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 23:00:17 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,17 @@ static int	connect(char *line, int **edges, t_vertex **rooms_list)
 		++i1;
 	while (rooms_list[i2] && !ft_strequ(rooms_list[i2]->name, split[1]))
 		++i2;
+	free(split[0]);
+	free(split[1]);
+	free(split);
 	if (!rooms_list[i1] || !rooms_list[i2])
 		return (0);
 	edges[i1][i2] = 1;
 	edges[i2][i1] = 1;
-	free(split[0]);
-	free(split[1]);
-	free(split);
 	return (1);
 }
 
-static void	linking(t_mfile *map, int **edges, t_vertex **rooms)
+static void	linking(t_input *map, int **edges, t_vertex **rooms)
 {
 	while (map)
 	{
@@ -99,7 +99,7 @@ static void	*new_room(char *line, t_vertex **rooms)
 	return (new);
 }
 
-t_vertex	**build_anthill(t_mfile *map, int **edges, int verteces)
+t_vertex	**build_anthill(t_input *map, int **edges, int verteces)
 {
 	t_vertex **rooms;
 

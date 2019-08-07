@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/04 23:05:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:07:54 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 22:52:03 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ static int	identify_line(char *line)
 	return (OTHER);
 }
 
-t_mfile		*read_input(t_mfile *prev)
+t_input		*read_input(t_input *prev)
 {
 	static char	*tail = NULL;
-	t_mfile		*new;
+	t_input		*new;
 
 	if (!tail)
 	{
@@ -90,7 +90,7 @@ t_mfile		*read_input(t_mfile *prev)
 			error(errno);
 		*tail = 0;
 	}
-	if (!(new = (t_mfile *)malloc(sizeof(t_mfile))))
+	if (!(new = (t_input *)malloc(sizeof(t_input))))
 		error(errno);
 	if (!(new->line = gnl(&tail)))
 	{
@@ -104,7 +104,7 @@ t_mfile		*read_input(t_mfile *prev)
 	return (new);
 }
 
-void		print_file(t_mfile *map)
+void		print_file(t_input *map)
 {
 	while (map->next)
 	{

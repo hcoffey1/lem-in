@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:26:06 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 22:57:24 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@
 # define START 4
 # define END 5
 
-typedef struct	s_mfile
+typedef struct	s_input
 {
 	char			*line;
 	int				type;
-	struct s_mfile	*next;
-	struct s_mfile	*prev;
-}				t_mfile;
+	struct s_input	*next;
+	struct s_input	*prev;
+}				t_input;
 
 typedef struct	s_vertex
 {
@@ -94,17 +94,18 @@ typedef struct	s_lemin
 	t_ants			*ants;
 }				t_lemin;
 
-t_lemin			*prepare_colony(t_mfile *map);
-t_mfile			*read_input(t_mfile *prev);
-void			validate(t_mfile *map, int *ants, int *verteces);
-t_vertex		**build_anthill(t_mfile *map, int **edges, int verteces);
-void			error(int error_type);
-int				ft_printf(const char *s, ...);
+t_input			*read_input(t_input *prev);
+void			validate(t_input *map, int *ants, int *verteces);
+t_lemin			*prepare_colony(t_input *map);
+t_vertex		**build_anthill(t_input *map, int **edges, int verteces);
 t_paths			*explore_anthill(t_lemin *colony);
 t_queue			*bfs(t_lemin *colony, int *len);
 t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list);
 int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags);
-void			print_file(t_mfile *map);
+
+void			error(int error_type);
+int				ft_printf(const char *s, ...);
+void			print_file(t_input *map);
 
 t_queue			*new_queue(t_vertex *start);
 void			push(t_queue **q, t_vertex *val);

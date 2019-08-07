@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 18:24:11 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/08 00:07:19 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,25 @@
 
 static t_ants	*populate(t_vertex *start, int num)
 {
-	static int	n = 0;
-	t_ants		*ants;
+	t_ants *first;
+	t_ants **ant_ptr;
 
-	if (!num)
-		return (NULL);
-	if (!(ants = (t_ants *)malloc(sizeof(t_ants))))
-		error(errno);
-	ants->num = ++n;
-	ants->room = start;
-	ants->path = NULL;
-	ants->next = populate(start, --num);
-	return (ants);
+	first = NULL;
+	ant_ptr = &first;
+	while (num)
+	{
+		if (!(*ant_ptr = (t_ants *)malloc(sizeof(t_ants))))
+			error(errno);
+		(*ant_ptr)->num = num;
+		(*ant_ptr)->room = start;
+		(*ant_ptr)->next = NULL;
+		ant_ptr = &(*ant_ptr)->next;
+		--num;
+	}
+	return (first);
 }
 
-static void		find_ends(t_lemin *colony, t_mfile *map)
+static void		find_ends(t_lemin *colony, t_input *map)
 {
 	int index;
 
@@ -79,7 +83,7 @@ static int		**edges_matrix(int verteces)
 	return (matrix);
 }
 
-t_lemin			*prepare_colony(t_mfile *map)
+t_lemin			*prepare_colony(t_input *map)
 {
 	t_lemin *colony;
 

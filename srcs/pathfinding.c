@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 21:17:41 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 19:58:52 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 23:27:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ static int		starting_point(t_paths *path_list, int flag_slow)
 		++n;
 		path_list = path_list->next;
 	}
-	return (n / 3 - flag_slow);
+	n = n / 3 - flag_slow;
+	return (n < 4 ? 4 - flag_slow : n);
 }
 
 static t_paths	*check_paths(t_lemin *colony, t_paths *path_list, int *turns)
@@ -97,8 +98,8 @@ t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list)
 	int		best_turns;
 	int		curr_turns;
 
-	best_set = check_paths(colony, path_list, &best_turns);
-	p = path_list;
+	best_set = check_paths(colony, (p = path_list), &best_turns);
+	curr_set = NULL;
 	while ((p = p->next))
 	{
 		curr_set = check_paths(colony, path_list, &curr_turns);

@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/08/07 20:36:45 by smorty           ###   ########.fr        #
+#    Updated: 2019/08/07 22:09:26 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ LFTPRINTF := $(LFTPRINTFDIR)libftprintf.a
 
 SRCS := $(addprefix $(SRCDIR), $(SRCSFILES))
 
-OBJ = $(SRCS:%.c=$(OBJDIR)%.o)
+OBJ := $(SRCS:%.c=$(OBJDIR)%.o)
 
 CC := gcc -Wall -Werror -Wextra
 
@@ -37,7 +37,7 @@ all: $(NAME)
 
 $(NAME): $(LFT) $(LFTPRINTF) $(OBJ)
 	@$(CC) $^ -o $@
-	@echo "$(NAME) done!"
+	@printf "\r\e[J\e[32m$@\e[0m done!\n\e[?25h"
 
 $(LFT):
 	@$(MAKE) -C $(LFTDIR)
@@ -50,7 +50,7 @@ $(LFTPRINTF):
 $(OBJDIR)%.o: %.c
 	@mkdir -p '$(@D)'
 	@$(CC) -I./include -I./$(LFTDIR) -c $< -o $@
-	@printf "\r\e[Jcompiling $^"
+	@printf "\r\e[?25l\e[Jcompiling \e[32m$(notdir $^)\e[0m"
 
 clean:
 	@rm -rf $(OBJDIR)

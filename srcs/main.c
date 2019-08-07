@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:07:41 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 23:38:46 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	usage(void)
 	ft_putstr("\t-v - visual mode\n");
 	ft_putstr("\t-d - debug mode (show paths found)\n");
 	ft_putstr("\t-p - precise mode (a bit better results but slower)\n");
-	ft_putstr("\t-n - output only the number of turns taken\n");
+	ft_putstr("\t-n - don't show map and ants movements\n");
 	exit(0);
 }
 
@@ -55,13 +55,13 @@ static int	get_flags(char *arg)
 	{
 		if (*arg == 'h')
 			usage();
-		else if (*arg == 'v')
+		else if (*arg == 'v' && !(flags & F_VISUAL))
 			flags |= F_VISUAL;
-		else if (*arg == 'd')
+		else if (*arg == 'd' && !(flags & F_DEBUG))
 			flags |= F_DEBUG + F_TURNS;
-		else if (*arg == 'p')
+		else if (*arg == 'p' && !(flags & F_SLOW))
 			flags |= F_SLOW;
-		else if (*arg == 'n')
+		else if (*arg == 'n' && (flags & F_FULL))
 		{
 			flags ^= F_FULL;
 			flags |= F_TURNS;
@@ -100,7 +100,7 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
-	t_mfile	*map;
+	t_input	*map;
 	t_paths	*solution;
 	int		flags;
 
