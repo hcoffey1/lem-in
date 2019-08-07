@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 21:06:21 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 17:02:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,20 @@ static void	linking(t_mfile *map, int **edges, t_vertex **rooms)
 	}
 }
 
+static void	check_coords(char *x_line, char *y_line, int x, int y)
+{
+	char *check;
+
+	check = ft_itoa(x);
+	if (!ft_strequ(x_line, check))
+		error(ERR_ROOM);
+	free(check);
+	check = ft_itoa(y);
+	if (!ft_strequ(y_line, check))
+		error(ERR_ROOM);
+	free(check);
+}
+
 static void	*new_room(char *line, t_vertex **rooms)
 {
 	static int	n = 0;
@@ -72,9 +86,7 @@ static void	*new_room(char *line, t_vertex **rooms)
 	new->name = split[0];
 	new->x = ft_atoi(split[1]);
 	new->y = ft_atoi(split[2]);
-	if (!ft_strequ(ft_itoa(new->x), split[1])
-		|| !ft_strequ(ft_itoa(new->y), split[2]))
-		error(ERR_ROOM);
+	check_coords(split[1], split[2], new->x, new->y);
 	free(split[1]);
 	free(split[2]);
 	free(split);

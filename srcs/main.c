@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 00:04:18 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 20:07:41 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,28 @@ static int	get_flags(char *arg)
 	return (flags);
 }
 
-static void	print_file(t_mfile *map)
+static void	cleanup(t_lemin *colony, t_paths *solution)
 {
-	while (map->next)
+	void	*clean;
+	int		i;
+
+	clear_paths(solution);
+	while (colony->ants)
 	{
-		ft_putstr(map->line);
-		ft_putchar('\n');
-		free(map->line);
-		map = map->next;
-		free(map->prev);
+		clean = colony->ants;
+		colony->ants = colony->ants->next;
+		free(clean);
 	}
-	ft_putstr(map->line);
-	ft_putstr("\n\n");
-	free(map->line);
-	free(map);
+	i = colony->verteces;
+	while (i--)
+	{
+		free(colony->rooms[i]->name);
+		free(colony->rooms[i]);
+		free(colony->edges[i]);
+	}
+	free(colony->rooms);
+	free(colony->edges);
+	free(colony);
 }
 
 int			main(int argc, char **argv)
@@ -94,7 +102,6 @@ int			main(int argc, char **argv)
 	t_lemin	*colony;
 	t_mfile	*map;
 	t_paths	*solution;
-	int		fd;
 	int		flags;
 
 	flags = F_FULL;
@@ -112,5 +119,6 @@ int			main(int argc, char **argv)
 	if (flags & F_DEBUG)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
-	return (0);
+	cleanup(colony, solution);
+	exit(0);
 }

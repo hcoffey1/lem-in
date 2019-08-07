@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/04 23:05:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 18:15:49 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 20:07:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,20 @@ t_mfile		*read_input(t_mfile *prev)
 	new->prev = prev;
 	new->next = read_input(new);
 	return (new);
+}
+
+void		print_file(t_mfile *map)
+{
+	while (map->next)
+	{
+		ft_putstr(map->line);
+		ft_putchar('\n');
+		free(map->line);
+		map = map->next;
+		free(map->prev);
+	}
+	ft_putstr(map->line);
+	ft_putstr("\n\n");
+	free(map->line);
+	free(map);
 }

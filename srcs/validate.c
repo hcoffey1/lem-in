@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/05 17:21:27 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/06 18:20:07 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 16:56:29 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 static int	check_ants(t_mfile **map)
 {
-	int ants;
+	char	*ants_line;
+	int		ants;
 
 	while ((*map)->type == COMMENT)
 		*map = (*map)->next;
 	if (!*map)
 		error(ERR_ANTS);
 	ants = ft_atoi((*map)->line);
-	if (ants < 0 || !ft_strequ((*map)->line, ft_itoa(ants)))
+	ants_line = ft_itoa(ants);
+	if (ants < 0 || !ft_strequ((*map)->line, ants_line))
 		error(ERR_ANTS);
+	free(ants_line);
 	*map = (*map)->next;
 	return (ants);
 }

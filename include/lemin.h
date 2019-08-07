@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 00:07:15 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 20:08:09 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ t_paths			*explore_anthill(t_lemin *colony);
 t_queue			*bfs(t_lemin *colony, int *len);
 t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list);
 int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags);
+void			print_file(t_mfile *map);
 
 t_queue			*new_queue(t_vertex *start);
 void			push(t_queue **q, t_vertex *val);
@@ -117,4 +118,3 @@ void			sort_paths(t_paths *list);
 void			clear_paths(t_paths *path_list);
 
 #endif
-

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   explore_graph.c                                    :+:      :+:    :+:   */
+/*   explore_anthill.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 20:51:55 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 00:28:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 19:59:06 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void		clean_after_search(t_vertex **rooms, int verteces)
 		}
 }
 
-static t_queue	*get_path_bfs(t_lemin *colony, int *len)
+static t_queue	*get_path(t_lemin *colony, int *len)
 {
 	t_vertex	*track;
 	t_queue		*path;
@@ -40,6 +40,8 @@ static t_queue	*get_path_bfs(t_lemin *colony, int *len)
 		++(*len);
 	}
 	colony->start->splitted = 0;
+	while (path->prev)
+		path = path->prev;
 	clean_after_search(colony->rooms, colony->verteces);
 	return (path);
 }
@@ -81,7 +83,7 @@ t_queue			*bfs(t_lemin *colony, int *len)
 	}
 	while (q)
 		pop(&q);
-	return (get_path_bfs(colony, len));
+	return (get_path(colony, len));
 }
 
 t_paths			*explore_anthill(t_lemin *colony)
