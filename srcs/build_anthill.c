@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 17:02:58 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 20:22:27 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ static void	*new_room(char *line, t_vertex **rooms)
 	t_vertex	*new;
 	char		**split;
 
-	if (!(new = (t_vertex *)malloc(sizeof(t_vertex)))
-		|| !(split = ft_strsplit(line, ' ')))
+	if (!(new = (t_vertex *)malloc(sizeof(t_vertex))))
+		error(errno);
+	if (!(split = ft_strsplit(line, ' ')))
 		error(errno);
 	if (!split[0] || *split[0] == 'L' || !split[1] || !split[2] || split[3])
 		error(ERR_ROOM);

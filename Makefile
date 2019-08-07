@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/08/07 20:15:08 by smorty           ###   ########.fr        #
+#    Updated: 2019/08/07 20:36:45 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME := lem-in
 
 SRCDIR := srcs/
 
-SRCSFILES := main.c read_input.c validate.c prepare_colony.c explore_anthill.c pathfinding.c queue.c paths.c
+SRCSFILES := main.c read_input.c validate.c build_anthill.c prepare_colony.c\
+			explore_anthill.c pathfinding.c open_the_gates.c queue.c paths.c
 
 OBJDIR := $(SRCDIR)obj/
 
@@ -34,8 +35,8 @@ CC := gcc -Wall -Werror -Wextra
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LFT) $(LFTPRINTF)
-	@$(CC) -L$(LFTDIR) -lft -L$(LFTPRINTFDIR) -lftprintf $^ -o $@
+$(NAME): $(LFT) $(LFTPRINTF) $(OBJ)
+	@$(CC) $^ -o $@
 	@echo "$(NAME) done!"
 
 $(LFT):
@@ -48,7 +49,8 @@ $(LFTPRINTF):
 
 $(OBJDIR)%.o: %.c
 	@mkdir -p '$(@D)'
-	@$(CC) -I./include -c $< -o $@
+	@$(CC) -I./include -I./$(LFTDIR) -c $< -o $@
+	@printf "\r\e[Jcompiling $^"
 
 clean:
 	@rm -rf $(OBJDIR)
@@ -56,6 +58,6 @@ clean:
 	@$(MAKE) -C $(LFTPRINTFDIR) fclean
 
 fclean: clean
-	@rm -f $(NAME1) $(NAME2)
+	@rm -f $(NAME)
 
 re: fclean all

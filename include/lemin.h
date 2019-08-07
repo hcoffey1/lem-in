@@ -6,19 +6,18 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:08:09 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/07 20:26:06 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN_H
 # define LEMIN_H
 
-# include <stdlib.h>
 # include <stdio.h>
 # include <errno.h>
 # include "libft.h"
 
-# define BUFF_SIZE		12
+# define BUFF_SIZE 12
 
 # define ERR_ARGS -1
 # define ERR_ANTS -2
