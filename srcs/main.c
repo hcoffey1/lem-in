@@ -6,30 +6,11 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 23:38:46 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/30 20:17:35 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin.h"
-
-void		error(int error_type)
-{
-	if (error_type == ERR_ARGS)
-		ft_putstr("ERROR: wrong arguments (use -h)\n");
-	else if (error_type == ERR_ROOM)
-		ft_putstr("ERROR: invalid room\n");
-	else if (error_type == ERR_ANTS)
-		ft_putstr("ERROR: invalid ants\n");
-	else if (error_type == ERR_ENDS)
-		ft_putstr("ERROR: invalid ##start and/or ##end\n");
-	else if (error_type == ERR_DUPE)
-		ft_putstr("ERROR: duplicate room name and/or coordinates\n");
-	else if (error_type == ERR_PATH)
-		ft_putstr("ERROR: no paths found\n");
-	else
-		perror("ERROR");
-	exit(error_type);
-}
 
 static void	usage(void)
 {
@@ -97,6 +78,22 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 	free(colony);
 }
 
+static void	print_file(t_input *map)
+{
+	while (map->next)
+	{
+		ft_putstr(map->line);
+		ft_putchar('\n');
+		free(map->line);
+		map = map->next;
+		free(map->prev);
+	}
+	ft_putstr(map->line);
+	ft_putstr("\n\n");
+	free(map->line);
+	free(map);
+}
+
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
@@ -109,7 +106,7 @@ int			main(int argc, char **argv)
 		flags = get_flags(*argv);
 	else if (argc != 1)
 		error(ERR_ARGS);
-	if (!(map = read_input(NULL)))
+	if (!(map = store_file(NULL)))
 		error(ERR_ANTS);
 	colony = prepare_colony(map);
 	colony->flags = flags;
@@ -119,6 +116,8 @@ int			main(int argc, char **argv)
 	if (flags & F_DEBUG)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
+	if (flags & F_VISUAL)
+		visualizer(colony, map);
 	cleanup(colony, solution);
 	exit(0);
 }

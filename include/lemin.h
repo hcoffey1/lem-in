@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 22:57:24 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/30 20:41:22 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <errno.h>
 # include "libft.h"
+# include "SDL.h"
+# include "SDL_ttf.h"
 
 # define BUFF_SIZE 12
 
@@ -38,6 +40,9 @@
 # define LINK 3
 # define START 4
 # define END 5
+
+# define LEMIN_SCREEN_WIDTH 1920
+# define LEMIN_SCREEN_HEIGHT 1200
 
 typedef struct	s_input
 {
@@ -94,7 +99,21 @@ typedef struct	s_lemin
 	t_ants			*ants;
 }				t_lemin;
 
-t_input			*read_input(t_input *prev);
+typedef struct	s_lemin_vis
+{
+	SDL_Renderer	*renderer;
+	TTF_Font		*font;
+	int				quit;
+	int				pause;
+	int				speed;
+	int				ended;
+	int				print;
+	int				controls;
+	int				color;
+}				t_lemin_vis;
+
+t_input			*store_file(t_input *prev);
+char			*read_input(void);
 void			validate(t_input *map, int *ants, int *verteces);
 t_lemin			*prepare_colony(t_input *map);
 t_vertex		**build_anthill(t_input *map, int **edges, int verteces);
@@ -105,7 +124,6 @@ int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags);
 
 void			error(int error_type);
 int				ft_printf(const char *s, ...);
-void			print_file(t_input *map);
 
 t_queue			*new_queue(t_vertex *start);
 void			push(t_queue **q, t_vertex *val);
@@ -117,4 +135,6 @@ void			print_paths(t_paths *path_list);
 void			sort_paths(t_paths *list);
 void			clear_paths(t_paths *path_list);
 
+void			visualizer(const t_lemin *colony, t_input *map);
+void			error_vis(const char *error_msg);
 #endif
