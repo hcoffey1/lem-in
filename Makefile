@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/08/30 20:17:50 by smorty           ###   ########.fr        #
+#    Updated: 2019/08/31 14:26:13 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,9 @@ LFTPRINTF_DIR := srcs/libs/ft_printf
 
 HEADERS := lemin.h libft.h ft_printf.h SDL.h SDL_ttf.h
 
-HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes srcs/libs/sdl2/include/SDL2 srcs/libs/sdl2_ttf/include/SDL2
+HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes srcs/libs/sdl2/include/SDL2 srcs/libs/sdl2_ttf/include/SDL2 srcs/libs/sdl_gfx/include/sdl
 
-SDL_LIBS := srcs/libs/sdl2/lib/libSDL2-2.0.0.dylib srcs/libs/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib
+SDL_LIBS := srcs/libs/sdl2/lib/libSDL2-2.0.0.dylib srcs/libs/sdl2_ttf/lib/libSDL2_ttf-2.0.0.dylib srcs/libs/sdl_gfx/lib/libSDL_gfx.dylib
 
 CC := gcc -Wall -Werror -Wextra
 

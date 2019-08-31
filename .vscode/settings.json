@@ -2,6 +2,8 @@
 	"files.associations": {
 		"lemin.h": "c",
 		"get_next_line.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"sdl_ttf.h": "c",
+		"sdl.h": "c"
 	}
 }

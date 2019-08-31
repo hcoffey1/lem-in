@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/30 20:41:22 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/31 17:02:40 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "libft.h"
 # include "SDL.h"
 # include "SDL_ttf.h"
+# include "SDL_gfxPrimitives.h"
 
 # define BUFF_SIZE 12
 
@@ -99,10 +100,18 @@ typedef struct	s_lemin
 	t_ants			*ants;
 }				t_lemin;
 
+typedef struct	s_assets
+{
+	TTF_Font		*font;
+	SDL_Texture		*node_img;
+	SDL_Texture		*start_img;
+	SDL_Texture		*end_img;
+}				t_assets;
+
 typedef struct	s_lemin_vis
 {
 	SDL_Renderer	*renderer;
-	TTF_Font		*font;
+	t_assets		*assets;
 	int				quit;
 	int				pause;
 	int				speed;

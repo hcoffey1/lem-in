@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/30 20:17:35 by smorty           ###   ########.fr       */
+/*   Updated: 2019/08/31 14:15:22 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,45 @@ static void	print_file(t_input *map)
 	free(map);
 }
 
+static int	**save_original_matrix(int **matrix, int verteces)
+{
+	int **copy;
+	int	i;
+	int	j;
+
+	if (!(copy = (int **)malloc(sizeof(int *) * verteces)))
+		error(errno);
+	i = verteces;
+	while (i--)
+	{
+		if (!(copy[i] = (int *)malloc(sizeof(int) * verteces)))
+			error(errno);
+		j = verteces;
+		while (j--)
+			copy[i][j] = matrix[i][j];
+	}
+	return (copy);
+}
+
+static void	restore_original_connections(t_lemin *colony, int **matrix)
+{
+	int i;
+
+	i = colony->verteces;
+	while (i--)
+	{
+		free(colony->edges[i]);
+		colony->edges[i] = matrix[i];
+	}
+	free(matrix);
+}
+
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
 	t_input	*map;
 	t_paths	*solution;
+	int		**edges_copy;
 	int		flags;
 
 	flags = F_FULL;
@@ -110,7 +144,9 @@ int			main(int argc, char **argv)
 		error(ERR_ANTS);
 	colony = prepare_colony(map);
 	colony->flags = flags;
+	edges_copy = save_original_matrix(colony->edges, colony->verteces);
 	solution = explore_anthill(colony);
+	restore_original_connections(colony, edges_copy);
 	if (flags & F_FULL)
 		print_file(map);
 	if (flags & F_DEBUG)
