@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/31 17:02:40 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/01 22:12:10 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,26 @@ typedef struct	s_assets
 	SDL_Texture		*node_img;
 	SDL_Texture		*start_img;
 	SDL_Texture		*end_img;
+	SDL_Texture		*ant_img;
 }				t_assets;
+
+typedef struct	s_ants_vis
+{
+	SDL_Rect			*ant;
+	int					x_dest;
+	int					y_dest;
+	struct s_ants_vis	*next;
+	struct s_ants_vis	*prev;
+}				t_ants_vis;
 
 typedef struct	s_lemin_vis
 {
 	SDL_Renderer	*renderer;
 	t_assets		*assets;
+	const t_lemin	*colony;
+	float			x_scale;
+	float			y_scale;
+	float			object_scale;
 	int				quit;
 	int				pause;
 	int				speed;
@@ -144,6 +158,8 @@ void			print_paths(t_paths *path_list);
 void			sort_paths(t_paths *list);
 void			clear_paths(t_paths *path_list);
 
-void			visualizer(const t_lemin *colony, t_input *map);
+void			visualizer(t_lemin *colony, int **edges_copy, t_paths *soultion);
+void			prepare_visualization(t_lemin *colony, int **matrix, t_paths *solution);
+t_lemin_vis		*init_visualizer(SDL_Window **window, const t_lemin *colony);
 void			error_vis(const char *error_msg);
 #endif

@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/31 14:15:22 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/01 20:49:52 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,19 +114,6 @@ static int	**save_original_matrix(int **matrix, int verteces)
 	return (copy);
 }
 
-static void	restore_original_connections(t_lemin *colony, int **matrix)
-{
-	int i;
-
-	i = colony->verteces;
-	while (i--)
-	{
-		free(colony->edges[i]);
-		colony->edges[i] = matrix[i];
-	}
-	free(matrix);
-}
-
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
@@ -144,16 +131,16 @@ int			main(int argc, char **argv)
 		error(ERR_ANTS);
 	colony = prepare_colony(map);
 	colony->flags = flags;
-	edges_copy = save_original_matrix(colony->edges, colony->verteces);
+	if (flags & F_VISUAL)
+		edges_copy = save_original_matrix(colony->edges, colony->verteces);
 	solution = explore_anthill(colony);
-	restore_original_connections(colony, edges_copy);
 	if (flags & F_FULL)
 		print_file(map);
 	if (flags & F_DEBUG)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
 	if (flags & F_VISUAL)
-		visualizer(colony, map);
+		visualizer(colony, edges_copy, solution);
 	cleanup(colony, solution);
 	exit(0);
 }

@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/08/31 14:26:13 by smorty           ###   ########.fr        #
+#    Updated: 2019/09/01 20:55:32 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME := lem-in
 
 SRCSFILES := main.c store_file.c read_input.c validate.c error.c\
 			build_anthill.c prepare_colony.c explore_anthill.c\
-			pathfinding.c open_the_gates.c queue.c paths.c visualizer.c
+			pathfinding.c open_the_gates.c queue.c paths.c\
+			visualizer.c init_visualizer.c
 
 SRCS_DIR := srcs
 
