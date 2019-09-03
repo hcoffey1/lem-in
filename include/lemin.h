@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/01 22:12:10 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/03 21:43:35 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 # include <stdio.h>
 # include <errno.h>
 # include "libft.h"
-# include "SDL.h"
-# include "SDL_ttf.h"
-# include "SDL_gfxPrimitives.h"
 
 # define BUFF_SIZE 12
 
@@ -41,9 +38,6 @@
 # define LINK 3
 # define START 4
 # define END 5
-
-# define LEMIN_SCREEN_WIDTH 1920
-# define LEMIN_SCREEN_HEIGHT 1200
 
 typedef struct	s_input
 {
@@ -100,41 +94,6 @@ typedef struct	s_lemin
 	t_ants			*ants;
 }				t_lemin;
 
-typedef struct	s_assets
-{
-	TTF_Font		*font;
-	SDL_Texture		*node_img;
-	SDL_Texture		*start_img;
-	SDL_Texture		*end_img;
-	SDL_Texture		*ant_img;
-}				t_assets;
-
-typedef struct	s_ants_vis
-{
-	SDL_Rect			*ant;
-	int					x_dest;
-	int					y_dest;
-	struct s_ants_vis	*next;
-	struct s_ants_vis	*prev;
-}				t_ants_vis;
-
-typedef struct	s_lemin_vis
-{
-	SDL_Renderer	*renderer;
-	t_assets		*assets;
-	const t_lemin	*colony;
-	float			x_scale;
-	float			y_scale;
-	float			object_scale;
-	int				quit;
-	int				pause;
-	int				speed;
-	int				ended;
-	int				print;
-	int				controls;
-	int				color;
-}				t_lemin_vis;
-
 t_input			*store_file(t_input *prev);
 char			*read_input(void);
 void			validate(t_input *map, int *ants, int *verteces);
@@ -158,8 +117,6 @@ void			print_paths(t_paths *path_list);
 void			sort_paths(t_paths *list);
 void			clear_paths(t_paths *path_list);
 
-void			visualizer(t_lemin *colony, int **edges_copy, t_paths *soultion);
-void			prepare_visualization(t_lemin *colony, int **matrix, t_paths *solution);
-t_lemin_vis		*init_visualizer(SDL_Window **window, const t_lemin *colony);
-void			error_vis(const char *error_msg);
+void			visualizer_main(t_lemin *colony, int **edges_copy, t_paths *soultion);
+
 #endif

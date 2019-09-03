@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 19:43:47 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/01 19:09:17 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/03 22:03:22 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ void	error(int error_type)
 void	error_vis(const char *error_msg)
 {
 	if (error_msg)
+	{
 		ft_putstr(error_msg);
+		write(1, "\n", 1);
+	}
 	exit(-1);
 }

@@ -4,6 +4,7 @@
 		"get_next_line.h": "c",
 		"libft.h": "c",
 		"sdl_ttf.h": "c",
-		"sdl.h": "c"
+		"sdl.h": "c",
+		"lemin_visualizer.h": "c"
 	}
 }

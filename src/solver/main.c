@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/01 20:49:52 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/03 21:43:45 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int			main(int argc, char **argv)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
 	if (flags & F_VISUAL)
-		visualizer(colony, edges_copy, solution);
+		visualizer_main(colony, edges_copy, solution);
 	cleanup(colony, solution);
 	exit(0);
 }
