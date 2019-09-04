@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 17:14:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 23:48:46 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 00:03:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void			key_press(t_lemin_vis *game, SDL_Keycode key)
 
 static int			color_path(int **edges, t_paths *solution, int speed)
 {
-	static int delay = 0;
+	static int delay = 50;
 
 	if (delay--)
 		return (0);
