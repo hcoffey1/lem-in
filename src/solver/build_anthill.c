@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 17:29:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/31 13:40:21 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 19:38:04 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,9 @@ static void	*new_room(char *line, t_vertex **rooms)
 		error(ERR_ROOM);
 	new->name = split[0];
 	new->x = ft_atoi(split[1]);
+	new->screen_x = 1.0;
 	new->y = ft_atoi(split[2]);
+	new->screen_y = 1.0;
 	check_coords(split[1], split[2], new->x, new->y);
 	free(split[1]);
 	free(split[2]);

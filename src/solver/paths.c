@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/06 19:19:43 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/07 20:04:01 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 23:08:18 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,29 +86,19 @@ void	sort_paths(t_paths *list)
 
 void	clear_paths(t_paths *path_list)
 {
-	t_queue *path;
-
 	if (path_list)
 	{
+		while (path_list->prev)
+			path_list = path_list->prev;
 		while (path_list->next)
 		{
-			path = path_list->path;
-			while (path->next)
-			{
-				path = path->next;
-				free(path->prev);
-			}
-			free(path);
+			while (path_list->path)
+				pop(&path_list->path);
 			path_list = path_list->next;
 			free(path_list->prev);
 		}
-		path = path_list->path;
-		while (path->next)
-		{
-			path = path->next;
-			free(path->prev);
-		}
-		free(path);
+		while (path_list->path)
+			pop(&path_list->path);
 		free(path_list);
 	}
 }

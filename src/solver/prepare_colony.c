@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/08/08 00:07:19 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 18:00:57 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,14 @@ static int		**edges_matrix(int verteces)
 	return (matrix);
 }
 
-t_lemin			*prepare_colony(t_input *map)
+t_lemin			*prepare_colony(t_input *map, int flags)
 {
 	t_lemin *colony;
 
 	if (!(colony = (t_lemin *)malloc(sizeof(t_lemin))))
 		error(errno);
 	validate(map, &colony->ants_num, &colony->verteces);
+	colony->flags = flags;
 	colony->edges = edges_matrix(colony->verteces);
 	colony->rooms = build_anthill(map, colony->edges, colony->verteces);
 	check_duplicates(colony->rooms);

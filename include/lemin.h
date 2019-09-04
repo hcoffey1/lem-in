@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 21:43:35 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 19:37:41 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef struct	s_vertex
 	int				index;
 	int				x;
 	int				y;
+	float			screen_x;
+	float			screen_y;
 	int				splitted;
 	int				closed;
 	struct s_vertex	*path;
@@ -88,6 +90,7 @@ typedef struct	s_lemin
 	int				verteces;
 	int				flags;
 	int				**edges;
+	int				**edges_backup;
 	t_vertex		**rooms;
 	t_vertex		*start;
 	t_vertex		*end;
@@ -97,7 +100,8 @@ typedef struct	s_lemin
 t_input			*store_file(t_input *prev);
 char			*read_input(void);
 void			validate(t_input *map, int *ants, int *verteces);
-t_lemin			*prepare_colony(t_input *map);
+t_lemin			*prepare_colony(t_input *map, int flags);
+
 t_vertex		**build_anthill(t_input *map, int **edges, int verteces);
 t_paths			*explore_anthill(t_lemin *colony);
 t_queue			*bfs(t_lemin *colony, int *len);
@@ -105,6 +109,7 @@ t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list);
 int				open_the_gates(t_lemin *colony, t_paths *path_list, int flags);
 
 void			error(int error_type);
+void			print_file(t_input *map);
 int				ft_printf(const char *s, ...);
 
 t_queue			*new_queue(t_vertex *start);
@@ -117,6 +122,6 @@ void			print_paths(t_paths *path_list);
 void			sort_paths(t_paths *list);
 void			clear_paths(t_paths *path_list);
 
-void			visualizer_main(t_lemin *colony, int **edges_copy, t_paths *soultion);
+void			visualizer_main(t_lemin *colony, t_paths *soultion);
 
 #endif

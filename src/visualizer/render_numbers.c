@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 20:13:17 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 22:52:25 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 23:35:54 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	put_text(t_lemin_vis *game, SDL_Rect *rect, char *p, char *text)
 
 	s = ft_strjoin(p, text);
 	rect->w = ft_strlen(s) * 20;
-	rect->x = (*p == 'S' ? X_OFFSET : LEMIN_SCREEN_WIDTH - X_OFFSET - rect->w);
+	rect->x = (*p == 'S' ? SCREEN_OFFSET :
+		LEMIN_SCREEN_WIDTH - SCREEN_OFFSET - rect->w);
 	texture = get_string_texture(game, s);
 	if (SDL_RenderCopy(game->renderer, texture, NULL, rect))
 		error_vis(SDL_GetError());
@@ -55,15 +56,15 @@ void		render_numbers(t_lemin_vis *game)
 	int			ants_start;
 
 	game->status->ended = find_ants(game->colony, &ants_start, &ants_end);
-	rect.h = 50;
-	rect.y = Y_OFFSET / 4;
+	rect.h = SCREEN_OFFSET;
+	rect.y = SCREEN_OFFSET / 4;
 	s = ft_itoa(ants_start);
 	put_text(game, &rect, "Start: ", s);
 	free(s);
 	s = ft_itoa(ants_end);
 	put_text(game, &rect, "End: ", s);
 	free(s);
-	rect.y = LEMIN_SCREEN_HEIGHT - Y_OFFSET / 4 - rect.h;
+	rect.y = LEMIN_SCREEN_HEIGHT - SCREEN_OFFSET / 4 - rect.h;
 	s = ft_itoa(game->moves);
 	put_text(game, &rect, "Moves: ", s);
 	free(s);

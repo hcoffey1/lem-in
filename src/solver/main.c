@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 21:43:45 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 22:32:31 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,7 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 	free(colony);
 }
 
-static void	print_file(t_input *map)
-{
-	while (map->next)
-	{
-		ft_putstr(map->line);
-		ft_putchar('\n');
-		free(map->line);
-		map = map->next;
-		free(map->prev);
-	}
-	ft_putstr(map->line);
-	ft_putstr("\n\n");
-	free(map->line);
-	free(map);
-}
-
-static int	**save_original_matrix(int **matrix, int verteces)
+static int	**backup_matrix(int **matrix, int verteces)
 {
 	int **copy;
 	int	i;
@@ -119,7 +103,6 @@ int			main(int argc, char **argv)
 	t_lemin	*colony;
 	t_input	*map;
 	t_paths	*solution;
-	int		**edges_copy;
 	int		flags;
 
 	flags = F_FULL;
@@ -129,10 +112,9 @@ int			main(int argc, char **argv)
 		error(ERR_ARGS);
 	if (!(map = store_file(NULL)))
 		error(ERR_ANTS);
-	colony = prepare_colony(map);
-	colony->flags = flags;
+	colony = prepare_colony(map, flags);
 	if (flags & F_VISUAL)
-		edges_copy = save_original_matrix(colony->edges, colony->verteces);
+		colony->edges_backup = backup_matrix(colony->edges, colony->verteces);
 	solution = explore_anthill(colony);
 	if (flags & F_FULL)
 		print_file(map);
@@ -140,7 +122,7 @@ int			main(int argc, char **argv)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
 	if (flags & F_VISUAL)
-		visualizer_main(colony, edges_copy, solution);
+		visualizer_main(colony, solution);
 	cleanup(colony, solution);
-	exit(0);
+	return (0);
 }

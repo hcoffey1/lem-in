@@ -6,11 +6,32 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 20:44:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 23:09:16 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 23:03:50 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin_visualizer.h"
+
+static void			get_rooms_real_coords(t_lemin_vis *game)
+{
+	int		i;
+	float	k;
+
+	i = game->colony->verteces;
+	while (i--)
+	{
+		k = (float)LEMIN_SCREEN_WIDTH / 2;
+		k = (k - game->colony->rooms[i]->x * game->x_scale) / k;
+		game->colony->rooms[i]->screen_x = round(
+			game->colony->rooms[i]->x * game->x_scale + SCREEN_OFFSET
+			+ (SCREEN_OFFSET + game->node_size / 2) * k);
+		k = (float)LEMIN_SCREEN_HEIGHT / 2;
+		k = (k - game->colony->rooms[i]->y * game->y_scale) / k;
+		game->colony->rooms[i]->screen_y = round(
+			game->colony->rooms[i]->y * game->y_scale + SCREEN_OFFSET
+			+ (SCREEN_OFFSET + game->node_size / 2) * k);
+	}
+}
 
 static void			scale_verteces(t_lemin_vis *game)
 {
@@ -19,8 +40,8 @@ static void			scale_verteces(t_lemin_vis *game)
 	int max_x;
 
 	i = game->colony->verteces;
-	max_x = (LEMIN_SCREEN_WIDTH - 50) / i;
-	max_y = (LEMIN_SCREEN_HEIGHT - 200) / i;
+	max_x = (LEMIN_SCREEN_WIDTH - SCREEN_OFFSET * 2) / i;
+	max_y = (LEMIN_SCREEN_HEIGHT - SCREEN_OFFSET * 4) / i;
 	game->node_size = max_x < max_y ? max_x : max_y;
 	max_x = -1;
 	max_y = -1;
@@ -31,8 +52,9 @@ static void			scale_verteces(t_lemin_vis *game)
 		if (max_y < game->colony->rooms[i]->y)
 			max_y = game->colony->rooms[i]->y;
 	}
-	game->x_scale = (float)(LEMIN_SCREEN_WIDTH - 50) / (max_x + 1);
-	game->y_scale = (float)(LEMIN_SCREEN_HEIGHT - 200) / (max_y + 1);
+	game->x_scale = (float)(LEMIN_SCREEN_WIDTH - SCREEN_OFFSET * 2) / max_x;
+	game->y_scale = (float)(LEMIN_SCREEN_HEIGHT - SCREEN_OFFSET * 2) / max_y;
+	get_rooms_real_coords(game);
 }
 
 static SDL_Texture	*get_file_texture(SDL_Renderer *renderer, const char *file)
@@ -59,6 +81,8 @@ static t_assets		*get_assets(SDL_Renderer *renderer)
 	assets->end = get_file_texture(renderer, "src/assets/end.bmp");
 	assets->closed = get_file_texture(renderer, "src/assets/closed.bmp");
 	assets->ant = get_file_texture(renderer, "src/assets/ant.bmp");
+	assets->pipe = get_file_texture(renderer, "src/assets/pipe.bmp");
+	assets->path = get_file_texture(renderer, "src/assets/path.bmp");
 	if (TTF_Init())
 		error_vis(TTF_GetError());
 	if (!(assets->font = TTF_OpenFont("src/assets/OpenSans-Semibold.ttf", 72)))
@@ -78,7 +102,8 @@ t_lemin_vis			*init_visualizer(SDL_Window **window, const t_lemin *colony)
 		error_vis(SDL_GetError());
 	if (!(game = (t_lemin_vis *)malloc(sizeof(t_lemin_vis))))
 		error(errno);
-	if (!(game->renderer = SDL_CreateRenderer(*window, -1, 1)))
+	if (!(game->renderer = SDL_CreateRenderer(*window, -1,
+		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)))
 		error_vis(SDL_GetError());
 	game->assets = get_assets(game->renderer);
 	game->colony = colony;
@@ -87,7 +112,7 @@ t_lemin_vis			*init_visualizer(SDL_Window **window, const t_lemin *colony)
 	if (!(game->status = (t_vis_status *)malloc(sizeof(t_vis_status))))
 		error(errno);
 	game->status->speed = 3;
-	game->status->paths_shown = 0;
+	game->status->paths = 0;
 	game->status->pause = 0;
 	game->status->ended = 1;
 	game->status->quit = 0;

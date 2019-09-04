@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 21:58:25 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 22:53:44 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 22:44:55 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ static void	render_controls(t_lemin_vis *game)
 	const char	*text;
 
 	text = "Esc: quit, +/-: speed, spacebar: ";
-	rect.x = X_OFFSET;
-	rect.y = LEMIN_SCREEN_HEIGHT - Y_OFFSET / 4 - rect.h;
+	rect.x = SCREEN_OFFSET;
+	rect.y = LEMIN_SCREEN_HEIGHT - SCREEN_OFFSET / 4 - rect.h;
 	rect.h = 50;
 	rect.w = ft_strlen(text) * 20;
 	texture = get_string_texture(game, text);

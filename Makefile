@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/09/03 23:42:46 by smorty           ###   ########.fr        #
+#    Updated: 2019/09/04 18:42:31 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ LFT_DIR := src/libs/libft
 
 LFTPRINTF_DIR := src/libs/ft_printf
 
-HEADERS := lemin.h libft.h ft_printf.h SDL.h SDL_ttf.h
+HEADERS := lemin.h lemin_visualizer.h libft.h ft_printf.h SDL.h SDL_ttf.h
 
 HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes src/libs/sdl2/include/SDL2 src/libs/sdl2_ttf/include/SDL2
 
@@ -40,7 +40,7 @@ SDL_LIBS := -L ~/.brew/lib -lSDL2 -lSDL2_ttf
 
 CC := gcc -Wall -Werror -Wextra
 
-vpath %.c $(SRCS_DIR)/solver $(SRCS_DIR)/visualizer
+vpath %.c $(SRCS_DIR) $(SRCS_DIR)/solver $(SRCS_DIR)/visualizer
 vpath %.o $(OBJ_DIR)
 vpath %.h $(HEADERS_DIR)
 vpath %.a $(LFT_DIR) $(LFTPRINTF_DIR)

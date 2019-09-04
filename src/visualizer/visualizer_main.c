@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 21:42:13 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 23:10:21 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 22:29:32 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ static void	cleanup(t_lemin_vis *game)
 	free(game);
 }
 
-void		visualizer_main(t_lemin *colony, int **edges, t_paths *solution)
+void		visualizer_main(t_lemin *colony, t_paths *solution)
 {
 	t_lemin_vis *game;
 	SDL_Window	*window;
 
-	restore_edges(colony, edges);
+	restore_edges(colony, colony->edges_backup);
 	return_ants_to_start(colony->ants, colony->start);
 	game = init_visualizer(&window, colony);
 	visualization_loop(game, solution);

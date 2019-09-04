@@ -1,5 +1,5 @@
 100
-a 0 0
+b 0 0
 c 2 2
 d 4 0
 f 6 2
@@ -9,27 +9,27 @@ i 9 0
 k 9 6
 j 9 4
 ##start
-b 0 4
+a 0 4
 l 7 8
 e 3 4
 ##end
-m 12 4
-n 12 8
+n 12 4
+m 12 8
 a-b
-b-e
+a-e
 e-g
 g-j
-j-m
+j-n
 #comment
-a-d
+b-d
 d-i
 i-j
-b-c
+a-c
 c-f
 f-g
 e-h
 h-l
-l-n
+l-m
 n-m
 g-k
-k-m
+k-n

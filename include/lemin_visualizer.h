@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 17:49:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/03 23:09:12 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/04 22:44:16 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 
 # define LEMIN_SCREEN_WIDTH 1920
 # define LEMIN_SCREEN_HEIGHT 1200
-# define X_OFFSET 50
-# define Y_OFFSET 100
+# define SCREEN_OFFSET 50
 
 typedef struct	s_assets
 {
@@ -31,12 +30,14 @@ typedef struct	s_assets
 	SDL_Texture		*end;
 	SDL_Texture		*closed;
 	SDL_Texture		*ant;
+	SDL_Texture		*pipe;
+	SDL_Texture		*path;
 }				t_assets;
 
 typedef struct  s_vis_status
 {
 	int				speed;
-	int				paths_shown;
+	int				paths;
 	int				pause;
 	int				ended;
 	int				quit;
