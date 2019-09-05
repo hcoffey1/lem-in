@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 23:50:49 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 18:00:57 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 19:25:29 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 
 static t_ants	*populate(t_vertex *start, int num)
 {
-	t_ants *first;
-	t_ants **ant_ptr;
+	t_ants	*first;
+	t_ants	**ant_ptr;
+	int		i;
 
+	i = 0;
 	first = NULL;
 	ant_ptr = &first;
-	while (num)
+	while (i++ < num)
 	{
 		if (!(*ant_ptr = (t_ants *)malloc(sizeof(t_ants))))
 			error(errno);
-		(*ant_ptr)->num = num;
+		(*ant_ptr)->num = i;
 		(*ant_ptr)->room = start;
 		(*ant_ptr)->next = NULL;
 		ant_ptr = &(*ant_ptr)->next;
-		--num;
 	}
 	return (first);
 }

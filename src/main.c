@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/21 17:58:11 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 22:32:31 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 22:39:38 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 	void	*clean;
 	int		i;
 
-	clear_paths(solution);
+	clear_paths(&solution);
 	while (colony->ants)
 	{
 		clean = colony->ants;

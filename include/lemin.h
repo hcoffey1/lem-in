@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 15:35:02 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 19:37:41 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 16:42:47 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void			pop(t_queue **q);
 void			add_path(t_paths **path_list, t_queue *path, int len);
 void			print_paths(t_paths *path_list);
 void			sort_paths(t_paths *list);
-void			clear_paths(t_paths *path_list);
+void			clear_paths(t_paths **path_list);
 
 void			visualizer_main(t_lemin *colony, t_paths *soultion);
 

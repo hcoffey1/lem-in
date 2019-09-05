@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/29 21:17:41 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 17:17:37 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 22:25:58 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,6 @@ static t_paths	*check_paths(t_lemin *colony, t_paths *path_list, int *turns)
 	t_queue		*path;
 	int			len;
 
-	while (path_list->prev)
-		path_list = path_list->prev;
 	if (!start)
 		start = starting_point(path_list, colony->flags & F_SLOW);
 	routing(path_list, colony->edges, colony->verteces, start++);
@@ -96,26 +94,25 @@ t_paths			*find_best_paths(t_lemin *colony, t_paths *path_list)
 {
 	t_paths	*best_set;
 	t_paths	*curr_set;
+	t_paths	*p;
 	int		best_turns;
 	int		curr_turns;
 
-	best_set = check_paths(colony, path_list, &best_turns);
-	curr_set = NULL;
-	while ((path_list = path_list->next))
+	p = path_list;
+	best_set = check_paths(colony, p, &best_turns);
+	curr_turns = -1;
+	while ((p = p->next) && curr_turns <= best_turns + (colony->flags & F_SLOW))
 	{
 		curr_set = check_paths(colony, path_list, &curr_turns);
-		if (curr_turns >= best_turns + (colony->flags & F_SLOW))
-			break ;
-		else if (curr_turns < best_turns)
+		if (curr_turns < best_turns)
 		{
 			best_turns = curr_turns;
-			clear_paths(best_set);
+			clear_paths(&best_set);
 			best_set = curr_set;
 		}
 		else
-			clear_paths(curr_set);
+			clear_paths(&curr_set);
 	}
-	clear_paths(curr_set);
-	clear_paths(path_list);
+	clear_paths(&path_list);
 	return (best_set);
 }

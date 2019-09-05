@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 17:49:39 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 22:44:16 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/05 22:17:37 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,21 @@ typedef struct	s_assets
 	SDL_Texture		*path;
 }				t_assets;
 
-typedef struct  s_vis_status
+typedef struct	s_vis_status
 {
 	int				speed;
 	int				paths;
 	int				pause;
 	int				ended;
 	int				quit;
-}               t_vis_status;
+}				t_vis_status;
 
 typedef struct	s_lemin_vis
 {
 	SDL_Renderer	*renderer;
 	t_assets		*assets;
 	const t_lemin	*colony;
-    t_vis_status	*status;
+	t_vis_status	*status;
 	float			x_scale;
 	float			y_scale;
 	float			object_scale;
