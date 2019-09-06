@@ -6,7 +6,7 @@
 /*   By: smorty <smorty@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 20:44:05 by smorty            #+#    #+#             */
-/*   Updated: 2019/09/04 23:03:50 by smorty           ###   ########.fr       */
+/*   Updated: 2019/09/06 15:49:38 by smorty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ static void			scale_verteces(t_lemin_vis *game)
 	i = game->colony->verteces;
 	max_x = (LEMIN_SCREEN_WIDTH - SCREEN_OFFSET * 2) / i;
 	max_y = (LEMIN_SCREEN_HEIGHT - SCREEN_OFFSET * 4) / i;
-	game->node_size = max_x < max_y ? max_x : max_y;
-	max_x = -1;
-	max_y = -1;
+	if ((game->node_size = max_x < max_y ? max_x : max_y) < 4)
+		error_vis("Too many nodes for proper visualization");
+	max_x = 1;
+	max_y = 1;
 	while (i--)
 	{
 		if (max_x < game->colony->rooms[i]->x)
