@@ -6,7 +6,7 @@
 #    By: smorty <smorty@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/18 19:46:57 by smorty            #+#    #+#              #
-#    Updated: 2019/09/04 18:42:31 by smorty           ###   ########.fr        #
+#    Updated: 2019/09/08 19:21:40 by smorty           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,8 @@ SRCSFILES := main.c store_file.c read_input.c validate.c error.c\
 
 SRCS_DIR := src
 
+LIBS_DIR := $(SRCS_DIR)/libs
+
 OBJS := $(SRCSFILES:.c=.o)
 
 OBJ_DIR := obj
@@ -28,15 +30,15 @@ LFT := libft.a
 
 LFTPRINTF := libftprintf.a
 
-LFT_DIR := src/libs/libft
+LFT_DIR := $(LIBS_DIR)/libft
 
-LFTPRINTF_DIR := src/libs/ft_printf
+LFTPRINTF_DIR := $(LIBS_DIR)/ft_printf
 
 HEADERS := lemin.h lemin_visualizer.h libft.h ft_printf.h SDL.h SDL_ttf.h
 
-HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes src/libs/sdl2/include/SDL2 src/libs/sdl2_ttf/include/SDL2
+HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes $(LIBS_DIR)/SDL2.framework/Headers $(LIBS_DIR)/SDL2_ttf.framework/Headers
 
-SDL_LIBS := -L ~/.brew/lib -lSDL2 -lSDL2_ttf
+SDL_LIBS := -Wl,-rpath,$(LIBS_DIR) -F $(LIBS_DIR) -framework SDL2 -framework SDL2_ttf
 
 CC := gcc -Wall -Werror -Wextra
 
