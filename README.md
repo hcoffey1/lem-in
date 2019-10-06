@@ -41,7 +41,7 @@ There are example maps and generator in 'maps' directory
 
 The structure of valid map should be as below
 
-![input](../img/input.png?raw=true | width = 100)
+![input](../img/input.png?raw=true)
 
 The program will validate input
 
