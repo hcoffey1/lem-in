@@ -12,7 +12,7 @@ The program was tested to solve graphs with up to ten thousand verteces and doze
 
 As a bonus part of the project there is a visualziation
 
-![img](visualization.gif)
+![visualization](../img/visualization.gif?raw=true)
 
 ### Installing
 
@@ -41,9 +41,9 @@ There are example maps and generator in 'maps' directory
 
 The structure of valid map should be as below
 
-![img](input.png)
+![input](../img/input.png?raw=true)
 
-The programm will validate input
+The program will validate input
 
 ### Algorithm
 
@@ -51,8 +51,8 @@ The programm will validate input
 * Find next path, prioritizing backward directions, if backward edge was used, remove it
 * Repeat until all possible paths are found
 * Remove all edges from graph
-* Add first few found paths to graph, and remove edges that were used more than once (Suurballe's algorithm)
-* Find solution paths with BFS, and check the flow
+* Add first few found paths to graph, then remove edges that were used more than once (Suurballe's algorithm)
+* Find solution paths with BFS, then check the flow
 * Repeat Suurballe with one more path at a time while solution is getting better
 
 ### Grade
