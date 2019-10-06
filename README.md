@@ -12,7 +12,7 @@ The program was tested to solve graphs with up to ten thousand verteces and doze
 
 As a bonus part of the project there is a visualziation
 
-![img]visualization.gif
+![img](visualization.gif)
 
 ### Installing
 
@@ -41,7 +41,7 @@ There are example maps and generator in 'maps' directory
 
 The structure of valid map should be as below
 
-![img]input.png
+![img](input.png)
 
 The programm will validate input
 
