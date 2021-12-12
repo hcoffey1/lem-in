@@ -10,6 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
+gem5Path=/home/hayden/proj/cs752/cache/gem5Public/gem5
+
 NAME := lem-in
 
 SRCSFILES := main.c store_file.c read_input.c validate.c error.c\
@@ -38,7 +40,7 @@ HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes
 
 SDL_LIBS := -Wl,-rpath,$(LIBS_DIR) -F $(LIBS_DIR)
 
-CC := gcc -Wall -Werror -Wextra
+CC := gcc -Wall -Werror -Wextra -I $(gem5Path)/include -L $(gem5Path)/util/m5/build/x86/out
 
 vpath %.c $(SRCS_DIR) $(SRCS_DIR)/solver
 vpath %.o $(OBJ_DIR)
@@ -48,7 +50,7 @@ vpath %.a $(LFT_DIR) $(LFTPRINTF_DIR)
 all: $(NAME)
 
 $(NAME): $(LFT) $(LFTPRINTF) $(OBJS)
-	@$(CC) $(addprefix $(OBJ_DIR)/, $(OBJS)) $(INCLUDE) -lft -L $(LFT_DIR) -lftprintf -L $(LFTPRINTF_DIR) $(SDL_LIBS) -o $@
+	@$(CC) $(addprefix $(OBJ_DIR)/, $(OBJS)) $(INCLUDE) -lft -L $(LFT_DIR) -lftprintf -L $(LFTPRINTF_DIR) $(SDL_LIBS) -lm5 -o $@
 	@printf "\r\e[J\e[32m$@\e[0m done!\n\e[?25h"
 
 $(OBJS): %.o: %.c $(HEADERS)

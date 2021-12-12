@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "lemin.h"
+#include "gem5/m5ops.h"
 
 static void	usage(void)
 {
@@ -77,6 +78,7 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 
 int			main(int argc, char **argv)
 {
+    m5_dump_reset_stats(0, 1000000000);
 	t_lemin	*colony;
 	t_input	*map;
 	t_paths	*solution;
