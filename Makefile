@@ -15,8 +15,13 @@ NAME := lem-in
 SRCSFILES := main.c store_file.c read_input.c validate.c error.c\
 			build_anthill.c prepare_colony.c explore_anthill.c\
 			pathfinding.c open_the_gates.c queue.c paths.c\
-			visualizer_main.c init_visualizer.c loop.c visualize.c\
-			render_anthill.c render_ants.c render_numbers.c
+			
+
+#SRCSFILES := main.c store_file.c read_input.c validate.c error.c\
+#			build_anthill.c prepare_colony.c explore_anthill.c\
+#			pathfinding.c open_the_gates.c queue.c paths.c\
+#			visualizer_main.c init_visualizer.c loop.c visualize.c\
+#			render_anthill.c render_ants.c render_numbers.c
 
 SRCS_DIR := src
 
@@ -34,15 +39,19 @@ LFT_DIR := $(LIBS_DIR)/libft
 
 LFTPRINTF_DIR := $(LIBS_DIR)/ft_printf
 
-HEADERS := lemin.h lemin_visualizer.h libft.h ft_printf.h SDL.h SDL_ttf.h
+HEADERS := lemin.h libft.h ft_printf.h
+#HEADERS := lemin.h lemin_visualizer.h libft.h ft_printf.h SDL.h SDL_ttf.h
 
-HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes $(LIBS_DIR)/SDL2.framework/Headers $(LIBS_DIR)/SDL2_ttf.framework/Headers
+#HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes $(LIBS_DIR)/SDL2.framework/Headers $(LIBS_DIR)/SDL2_ttf.framework/Headers
+HEADERS_DIR := include $(LFT_DIR) $(LFTPRINTF_DIR)/includes 
 
-SDL_LIBS := -Wl,-rpath,$(LIBS_DIR) -F $(LIBS_DIR) -framework SDL2 -framework SDL2_ttf
+#SDL_LIBS := -Wl,-rpath,$(LIBS_DIR) -F $(LIBS_DIR) -framework SDL2 -framework SDL2_ttf
+SDL_LIBS := -Wl,-rpath,$(LIBS_DIR) -F $(LIBS_DIR)
 
 CC := gcc -Wall -Werror -Wextra
 
-vpath %.c $(SRCS_DIR) $(SRCS_DIR)/solver $(SRCS_DIR)/visualizer
+#vpath %.c $(SRCS_DIR) $(SRCS_DIR)/solver $(SRCS_DIR)/visualizer
+vpath %.c $(SRCS_DIR) $(SRCS_DIR)/solver
 vpath %.o $(OBJ_DIR)
 vpath %.h $(HEADERS_DIR)
 vpath %.a $(LFT_DIR) $(LFTPRINTF_DIR)

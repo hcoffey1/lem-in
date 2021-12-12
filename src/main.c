@@ -19,7 +19,6 @@ static void	usage(void)
 	ft_putstr("use '<' to redirect from file)\n");
 	ft_putstr("flags:\n");
 	ft_putstr("\t-h - usage\n");
-	ft_putstr("\t-v - visual mode\n");
 	ft_putstr("\t-d - debug mode (show paths found)\n");
 	ft_putstr("\t-p - precise mode (a bit better results but slower)\n");
 	ft_putstr("\t-n - don't show map and ants movements\n");
@@ -36,8 +35,6 @@ static int	get_flags(char *arg)
 	{
 		if (*arg == 'h')
 			usage();
-		else if (*arg == 'v' && !(flags & F_VISUAL))
-			flags |= F_VISUAL;
 		else if (*arg == 'd' && !(flags & F_DEBUG))
 			flags |= F_DEBUG + F_TURNS;
 		else if (*arg == 'p' && !(flags & F_SLOW))
@@ -78,26 +75,6 @@ static void	cleanup(t_lemin *colony, t_paths *solution)
 	free(colony);
 }
 
-static int	**backup_matrix(int **matrix, int verteces)
-{
-	int **copy;
-	int	i;
-	int	j;
-
-	if (!(copy = (int **)malloc(sizeof(int *) * verteces)))
-		error(errno);
-	i = verteces;
-	while (i--)
-	{
-		if (!(copy[i] = (int *)malloc(sizeof(int) * verteces)))
-			error(errno);
-		j = verteces;
-		while (j--)
-			copy[i][j] = matrix[i][j];
-	}
-	return (copy);
-}
-
 int			main(int argc, char **argv)
 {
 	t_lemin	*colony;
@@ -113,16 +90,12 @@ int			main(int argc, char **argv)
 	if (!(map = store_file(NULL)))
 		error(ERR_ANTS);
 	colony = prepare_colony(map, flags);
-	if (flags & F_VISUAL)
-		colony->edges_backup = backup_matrix(colony->edges, colony->verteces);
 	solution = explore_anthill(colony);
 	if (flags & F_FULL)
 		print_file(map);
 	if (flags & F_DEBUG)
 		print_paths(solution);
 	open_the_gates(colony, solution, flags);
-	if (flags & F_VISUAL)
-		visualizer_main(colony, solution);
 	cleanup(colony, solution);
 	return (0);
 }
